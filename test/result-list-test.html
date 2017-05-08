@@ -1,0 +1,229 @@
+<!--
+Copyright 2017 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../result-list.html">
+</head>
+
+<body>
+  <test-fixture id="result-list-fixture">
+    <template>
+      <result-list></result-list>
+    </template>
+  </test-fixture>
+
+  <script>
+    /* globals suite, test, expect, setup, fixture, flush */
+    /* jshint -W030 */
+    suite('result-list tests', function() {
+      var element;
+
+      setup(function(done) {
+        element = fixture('result-list-fixture');
+        flush(done);
+      });
+
+      test('default properties are set correctly', function() {
+        expect(element.page).to.equal(1);
+        expect(element.loading).to.be.false;
+        expect(element.flagProperty).to.equal('flag');
+        expect(element.highlightedTextProperty).to.equal('highlightedText');
+        expect(element.iconProperty).to.equal('icon');
+        expect(element.linkProperty).to.equal('link');
+        expect(element.rankProperty).to.equal('rank');
+        expect(element.styleClassProperty).to.equal('styleClass');
+        expect(element.textProperty).to.equal('text');
+        expect(element.typeProperty).to.equal('type');
+        expect(element.headerExtractionsProperty).to.deep.equal('headerExtractions');
+        expect(element.detailExtractionsProperty).to.deep.equal('detailExtractions');
+        expect(element.extractionDataProperty).to.equal('data');
+        expect(element.extractionDataConfidenceProperty).to.equal('confidence');
+        expect(element.extractionDataHighlightProperty).to.equal('highlight');
+        expect(element.extractionDataIconProperty).to.equal('icon');
+        expect(element.extractionDataLinkProperty).to.equal('link');
+        expect(element.extractionDataStyleClassProperty).to.equal('styleClass');
+        expect(element.extractionDataTextProperty).to.equal('text');
+        expect(element.extractionNameProperty).to.equal('name');
+        expect(element.detailsProperty).to.deep.equal('details');
+        expect(element.detailHighlightedTextProperty).to.equal('highlightedText');
+        expect(element.detailLinkProperty).to.equal('link');
+        expect(element.detailNameProperty).to.equal('name');
+        expect(element.detailTextProperty).to.equal('text');
+        expect(element.imagesProperty).to.deep.equal('images');
+        expect(element.imageLinkProperty).to.equal('link');
+        expect(element.imageSourceProperty).to.equal('source');
+        expect(element.smallImageStyleClass).to.equal('');
+        expect(element.largeImageStyleClass).to.equal('');
+        expect(element.highlightedTextTags).to.equal('em');
+        expect(element.newTab).to.be.false;
+        expect(element.prettyName).to.equal('Results');
+        expect(element.prettyNameSingular).to.equal('Result');
+      });
+
+      test('does have paginated-list element', function() {
+        expect(element.$$('paginated-list')).to.exist;
+      });
+
+      test('does not have single-result element', function() {
+        expect(element.$$('single-result')).to.not.exist;
+      });
+
+      test('_createHeader does return header correctly', function() {
+        expect(element._createHeader).to.be.a('Function');
+        expect(element._createHeader('singular', 'plural', 0, 0, false)).to.equal('No plural');
+        expect(element._createHeader('singular', 'plural', 1, 0, false)).to.equal('1 singular');
+        expect(element._createHeader('singular', 'plural', 1, 1, false)).to.equal('1 singular');
+        expect(element._createHeader('singular', 'plural', 10, 0, false)).to.equal('10 plural');
+        expect(element._createHeader('singular', 'plural', 10, 1, false)).to.equal('1 of 10 plural');
+        expect(element._createHeader('singular', 'plural', 10, 10, false)).to.equal('10 plural');
+        expect(element._createHeader('singular', 'plural', 0, 0, true)).to.equal('Loading plural');
+        expect(element._createHeader('singular', 'plural', 10, 0, true)).to.equal('10 plural');
+      });
+
+      test('_getString does return correctly', function() {
+        expect(element._getString).to.be.a('Function');
+        expect(element._getString({}, 'property')).to.equal('');
+        expect(element._getString({
+          property: 'text'
+        }, 'notproperty')).to.equal('');
+        expect(element._getString({
+          notproperty: 'text'
+        }, 'property')).to.equal('');
+        expect(element._getString({
+          property: 'text'
+        }, 'property')).to.equal('text');
+      });
+
+      test('_getList does return correctly', function() {
+        expect(element._getList).to.be.a('Function');
+        expect(element._getList({}, 'property')).to.deep.equal([]);
+        expect(element._getList({
+          property: ['text']
+        }, 'notproperty')).to.deep.equal([]);
+        expect(element._getList({
+          notproperty: ['text']
+        }, 'property')).to.deep.equal([]);
+        expect(element._getList({
+          property: ['text']
+        }, 'property')).to.deep.equal(['text']);
+        expect(element._getList({
+          property: [1, 2, 3]
+        }, 'property')).to.deep.equal([1, 2, 3]);
+        expect(element._getList({
+          property: [true, false]
+        }, 'property')).to.deep.equal([true, false]);
+        expect(element._getList({
+          property: [{
+            key: 'value'
+          }]
+        }, 'property')).to.deep.equal([{
+          key: 'value'
+        }]);
+        expect(element._getList({
+          property: [[1], [2, 3]]
+        }, 'property')).to.deep.equal([[1], [2, 3]]);
+      });
+    });
+
+    suite('result-list tests with results', function() {
+      var element;
+
+      setup(function(done) {
+        element = fixture('result-list-fixture');
+        element.queryResults = [{
+          text: 'myText'
+        }];
+        element.totalResults = 2;
+        element.pageSize = 1;
+        flush(done);
+      });
+
+      test('default properties are set correctly', function() {
+        expect(element.page).to.equal(1);
+        expect(element.loading).to.be.false;
+        expect(element.flagProperty).to.equal('flag');
+        expect(element.highlightedTextProperty).to.equal('highlightedText');
+        expect(element.iconProperty).to.equal('icon');
+        expect(element.linkProperty).to.equal('link');
+        expect(element.rankProperty).to.equal('rank');
+        expect(element.styleClassProperty).to.equal('styleClass');
+        expect(element.textProperty).to.equal('text');
+        expect(element.typeProperty).to.equal('type');
+        expect(element.headerExtractionsProperty).to.deep.equal('headerExtractions');
+        expect(element.detailExtractionsProperty).to.deep.equal('detailExtractions');
+        expect(element.extractionDataProperty).to.equal('data');
+        expect(element.extractionDataConfidenceProperty).to.equal('confidence');
+        expect(element.extractionDataHighlightProperty).to.equal('highlight');
+        expect(element.extractionDataIconProperty).to.equal('icon');
+        expect(element.extractionDataLinkProperty).to.equal('link');
+        expect(element.extractionDataStyleClassProperty).to.equal('styleClass');
+        expect(element.extractionDataTextProperty).to.equal('text');
+        expect(element.extractionNameProperty).to.equal('name');
+        expect(element.detailsProperty).to.deep.equal('details');
+        expect(element.detailHighlightedTextProperty).to.equal('highlightedText');
+        expect(element.detailLinkProperty).to.equal('link');
+        expect(element.detailNameProperty).to.equal('name');
+        expect(element.detailTextProperty).to.equal('text');
+        expect(element.imagesProperty).to.deep.equal('images');
+        expect(element.imageLinkProperty).to.equal('link');
+        expect(element.imageSourceProperty).to.equal('source');
+        expect(element.smallImageStyleClass).to.equal('');
+        expect(element.largeImageStyleClass).to.equal('');
+        expect(element.highlightedTextTags).to.equal('em');
+        expect(element.newTab).to.be.false;
+        expect(element.prettyName).to.equal('Results');
+        expect(element.prettyNameSingular).to.equal('Result');
+      });
+
+      test('other properties are set correctly', function() {
+        expect(element.pageSize).to.equal(1);
+        expect(element.queryResults).to.deep.equal([{
+          text: 'myText'
+        }]);
+        expect(element.totalResults).to.equal(2);
+        expect(element.shownResults).to.deep.equal([{
+          text: 'myText'
+        }]);
+        expect(element.header).to.equal('1 of 2 Results');
+      });
+
+      test('does have paginated-list element', function() {
+        expect(element.$$('paginated-list')).to.exist;
+        expect(element.$$('paginated-list').loading).to.be.false;
+        expect(element.$$('paginated-list').loadType).to.equal('Results');
+        expect(element.$$('paginated-list').page).to.equal(1);
+        expect(element.$$('paginated-list').pageSize).to.equal(1);
+        expect(element.$$('paginated-list').totalItems).to.equal(2);
+        expect(element.$$('paginated-list').items).to.deep.equal([{
+          text: 'myText'
+        }]);
+        expect(element.$$('paginated-list').shownItems).to.deep.equal([{
+          text: 'myText'
+        }]);
+      });
+
+      test('does have single-result element', function() {
+        expect(element.$$('single-result')).to.exist;
+      });
+    });
+  </script>
+</body>
+</html>
