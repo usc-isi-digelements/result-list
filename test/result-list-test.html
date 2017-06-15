@@ -94,7 +94,7 @@ limitations under the License.
         expect(element._createHeader('singular', 'plural', 10, 0, false)).to.equal('10 plural');
         expect(element._createHeader('singular', 'plural', 10, 1, false)).to.equal('1 of 10 plural');
         expect(element._createHeader('singular', 'plural', 10, 10, false)).to.equal('10 plural');
-        expect(element._createHeader('singular', 'plural', 0, 0, true)).to.equal('Loading plural');
+        expect(element._createHeader('singular', 'plural', 0, 0, true)).to.equal('Loading plural...');
         expect(element._createHeader('singular', 'plural', 10, 0, true)).to.equal('10 plural');
       });
 

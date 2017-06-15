@@ -686,7 +686,7 @@ results = [{
           return totalCountString + ' ' + (totalCount === 1 ? prettyNameSingular : prettyNamePlural);
         }
         if(loading) {
-          return 'Loading ' + prettyNamePlural;
+          return 'Loading ' + prettyNamePlural + '...';
         }
         return 'No ' + prettyNamePlural;
       },
