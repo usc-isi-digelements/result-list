@@ -15,6 +15,7 @@ limitations under the License.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../build-and-run-query/build-and-run-query.html">
 <link rel="import" href="../paginated-list/paginated-list.html">
 <link rel="import" href="../single-result/single-result.html">
 
@@ -90,7 +91,7 @@ results = [{
       }
 
       paginated-list {
-        --paginated-list-max-height: var(--result-list-max-height, 500px);
+        --paginated-list-max-height: var(--result-list-max-height, 1500px);
       }
 
       single-result:first-of-type {
@@ -115,40 +116,67 @@ results = [{
       page-size="[[pageSize]]"
       shown-items="{{shownResults}}">
 
-      <template is="dom-repeat" items="[[shownResults]]" initial-count="25">
+      <template is="dom-repeat" items="[[_repeatList]]" initial-count="25">
+        <template is="dom-if" if="[[_shouldRunCachedPageQuery(item.selected)]]">
+          <build-and-run-query
+            fields='"doc_id"'
+            values="[[_getString(item.result, idProperty)]]"
+            client="[[client]]"
+            index-name="[[indexName]]"
+            index-types="[[indexTypes]]"
+            aggregations="[]"
+            filters="[]"
+            source-exclude="[[sourceExclude]]"
+            source-include="[[sourceInclude]]"
+            transform-config="[[searchFields]]"
+            transform-function="[[cacheTransform]]"
+            error="{{item.cachedPageError}}"
+            loading="{{item.cachedPageLoading}}"
+            results="{{item.cachedPage}}"
+            total="{{item.cachedPageTotal}}">
+          </build-and-run-query>
+        </template>
+
         <single-result
-          flag="[[_getString(item, flagProperty)]]"
-          highlighted-text="[[_getString(item, highlightedTextProperty)]]"
-          icon="[[_getString(item, iconProperty)]]"
-          link="[[_getString(item, linkProperty)]]"
-          rank="[[_getString(item, rankProperty)]]"
-          style-class="[[_getString(item, styleClassProperty)]]"
-          text="[[_getString(item, textProperty)]]"
-          type="[[_getString(item, typeProperty)]]"
-          header-extractions="[[_getList(item, headerExtractionsProperty)]]"
-          detail-extractions="[[_getList(item, detailExtractionsProperty)]]"
+          cached-page="[[item.cachedPage]]"
+          flag="[[_getString(item.result, flagProperty)]]"
+          highlighted-text="[[_getString(item.result, highlightedTextProperty)]]"
+          icon="[[_getString(item.result, iconProperty)]]"
+          link="[[_getString(item.result, linkProperty)]]"
+          rank="[[_getString(item.result, rankProperty)]]"
+          result-id="[[_getString(item.result, idProperty)]]"
+          style-class="[[_getString(item.result, styleClassProperty)]]"
+          text="[[_getString(item.result, textProperty)]]"
+          type="[[_getString(item.result, typeProperty)]]"
+          header-extractions="[[_getList(item.result, headerExtractionsProperty)]]"
+          detail-extractions="[[_getList(item.result, detailExtractionsProperty)]]"
           extraction-data-property="[[extractionDataProperty]]"
-          extraction-data-annotate-property="[[extractionDataAnnotateProperty]]"
+          extraction-data-classifications-property="[[extractionDataClassificationsProperty]]"
           extraction-data-highlight-property="[[extractionDataHighlightProperty]]"
           extraction-data-icon-property="[[extractionDataIconProperty]]"
           extraction-data-id-property="[[extractionDataIdProperty]]"
           extraction-data-link-property="[[extractionDataLinkProperty]]"
+          extraction-data-provenances-property="[[extractionDataProvenancesProperty]]"
           extraction-data-style-class-property="[[extractionDataStyleClassProperty]]"
           extraction-data-text-property="[[extractionDataTextProperty]]"
-          extraction-data-type-property="[[extractionDataTypeProperty]]"
           extraction-name-property="[[extractionNameProperty]]"
-          details="[[_getList(item, detailsProperty)]]"
+          extraction-provenance-highlight-tag="[[extractionProvenanceHighlightTag]]"
+          extraction-provenance-method-property="[[extractionProvenanceMethodProperty]]"
+          extraction-provenance-text-property="[[extractionProvenanceTextProperty]]"
+          details="[[_getList(item.result, detailsProperty)]]"
           detail-highlighted-text-property="[[detailHighlightedTextProperty]]"
           detail-link-property="[[detailLinkProperty]]"
           detail-name-property="[[detailNameProperty]]"
           detail-text-property="[[detailTextProperty]]"
-          images="[[_getList(item, imagesProperty)]]"
+          images="[[_getList(item.result, imagesProperty)]]"
           image-link-property="[[imageLinkProperty]]"
           image-source-property="[[imageSourceProperty]]"
           small-image-style-class="[[smallImageStyleClass]]"
           large-image-style-class="[[largeImageStyleClass]]"
           highlighted-text-tags="[[highlightedTextTags]]"
-          new-tab="[[newTab]]">
+          new-tab="[[newTab]]"
+          tag-manager="[[tagManager]]"
+          selected="{{item.selected}}">
         </single-result>
       </template>
     </paginated-list>
@@ -264,6 +292,19 @@ results = [{
         /**
          * (Optional)
          *
+         * The ID property in the result objects.
+         *
+         * @type {String}
+         * @default 'id'
+         */
+        idProperty: {
+          type: String,
+          value: 'id'
+        },
+
+        /**
+         * (Optional)
+         *
          * The link property in the result objects.
          *
          * @type {String}
@@ -368,7 +409,20 @@ results = [{
         /**
          * (Optional)
          *
-         * The confidence property in the data objects from the extraction objects.  Supported confidence values are "high" and "low".
+         * The property for the classifications of each item in the extraction data.
+         *
+         * @type {String}
+         * @default 'classifications'
+         */
+        extractionDataClassificationsProperty: {
+          type: String,
+          value: 'classifications'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The confidence property in the data objects from the extraction objects.
          *
          * @type {String}
          * @default 'confidence'
@@ -407,6 +461,19 @@ results = [{
         /**
          * (Optional)
          *
+         * The ID property in the data objects from the extraction objects.
+         *
+         * @type {String}
+         * @default 'id'
+         */
+        extractionDataIdProperty: {
+          type: String,
+          value: 'id'
+        },
+
+        /**
+         * (Optional)
+         *
          * The link property in the data objects from the extraction objects.
          *
          * @type {String}
@@ -415,6 +482,19 @@ results = [{
         extractionDataLinkProperty: {
           type: String,
           value: 'link'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The provenances property in the data objects from the extraction objects.
+         *
+         * @type {String}
+         * @default 'provenances'
+         */
+        extractionDataProvenancesProperty: {
+          type: String,
+          value: 'provenances'
         },
 
         /**
@@ -454,6 +534,43 @@ results = [{
         extractionNameProperty: {
           type: String,
           value: 'name'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The provenance highlight tag.
+         *
+         * @type {String}
+         */
+        extractionProvenanceHighlightTag: {
+          type: String
+        },
+
+        /**
+         * (Optional)
+         *
+         * The method property in provenance objects from the data objects from the extraction objects.
+         *
+         * @type {String}
+         * @default 'method'
+         */
+        extractionProvenanceMethodProperty: {
+          type: String,
+          value: 'method'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The text property in provenance objects from the data objects from the extraction objects.
+         *
+         * @type {String}
+         * @default 'text'
+         */
+        extractionProvenanceTextProperty: {
+          type: String,
+          value: 'text'
         },
 
         /**
@@ -639,6 +756,102 @@ results = [{
         },
 
         /**
+         * (Optional)
+         *
+         * The cached page transform function.
+         *
+         * @type {Object}
+         */
+        cacheTransform: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
+         * The elasticsearch client object for the cached page query.
+         *
+         * @type {Object}
+         */
+        client: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
+         * The elasticsearch index name for the cached page query.
+         *
+         * @type {String}
+         */
+        indexName: {
+          type: String
+        },
+
+        /**
+         * (Optional)
+         *
+         * The elasticsearch index types for the cached page query.
+         *
+         * @type {Array}
+         */
+        indexTypes: {
+          type: Array
+        },
+
+        /**
+         * (Optional)
+         *
+         * The search fields config object for the cached page transform function.
+         *
+         * @type {Object}
+         */
+        searchFields: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
+         * The source fields to exclude in the results for the cached page query.
+         *
+         * @type {Array}
+         * @default []
+         */
+        sourceExclude: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+        },
+
+        /**
+         * (Optional)
+         *
+         * The source fields to include in the results for the cached page query.
+         *
+         * @type {Array}
+         * @default []
+         */
+        sourceInclude: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+        },
+
+        /**
+         * (Optional)
+         *
+         * The tag manager.
+         *
+         * @type {Object}
+         */
+        tagManager: {
+          type: Object
+        },
+
+        /**
          * (Output)
          *
          * The header for the list.
@@ -660,6 +873,17 @@ results = [{
          */
         shownResults: {
           notify: true,
+          type: Array
+        },
+
+        /**
+         * The list of results and their cached pages for the repeat template.
+         *
+         * @type {Array}
+         * @private
+         */
+        _repeatList: {
+          computed: '_createRepeatList(shownResults)',
           type: Array
         }
       },
@@ -692,6 +916,22 @@ results = [{
       },
 
       /**
+       * Creates and returns the `_repeatList` using the given `shownResults`.
+       *
+       * @param {Array} shownResults
+       * @return {Array}
+       * @private
+       */
+      _createRepeatList: function(shownResults) {
+        return shownResults.map(function(result) {
+          return {
+            result: result,
+            selected: 0
+          };
+        });
+      },
+
+      /**
        * Returns the array in the given item at the given property or an empty array by default.
        *
        * @param {Object} item
@@ -713,6 +953,17 @@ results = [{
        */
       _getString: function(item, property) {
         return (item ? item[property] : undefined) || '';
+      },
+
+      /**
+       * Returns whether to run the cached page query.
+       *
+       * @param {Number} selected
+       * @return {Boolean}
+       * @private
+       */
+      _shouldRunCachedPageQuery: function(selected) {
+        return selected === 1;
       }
     });
   })();

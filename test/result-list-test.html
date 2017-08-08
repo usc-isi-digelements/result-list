@@ -41,12 +41,13 @@ limitations under the License.
         flush(done);
       });
 
-      test('default properties are set correctly', function() {
+      test('properties are set as expected', function() {
         expect(element.page).to.equal(1);
         expect(element.loading).to.be.false;
         expect(element.flagProperty).to.equal('flag');
         expect(element.highlightedTextProperty).to.equal('highlightedText');
         expect(element.iconProperty).to.equal('icon');
+        expect(element.idProperty).to.equal('id');
         expect(element.linkProperty).to.equal('link');
         expect(element.rankProperty).to.equal('rank');
         expect(element.styleClassProperty).to.equal('styleClass');
@@ -55,13 +56,18 @@ limitations under the License.
         expect(element.headerExtractionsProperty).to.deep.equal('headerExtractions');
         expect(element.detailExtractionsProperty).to.deep.equal('detailExtractions');
         expect(element.extractionDataProperty).to.equal('data');
+        expect(element.extractionDataClassificationsProperty).to.equal('classifications');
         expect(element.extractionDataConfidenceProperty).to.equal('confidence');
         expect(element.extractionDataHighlightProperty).to.equal('highlight');
         expect(element.extractionDataIconProperty).to.equal('icon');
+        expect(element.extractionDataIdProperty).to.equal('id');
         expect(element.extractionDataLinkProperty).to.equal('link');
+        expect(element.extractionDataProvenancesProperty).to.equal('provenances');
         expect(element.extractionDataStyleClassProperty).to.equal('styleClass');
         expect(element.extractionDataTextProperty).to.equal('text');
         expect(element.extractionNameProperty).to.equal('name');
+        expect(element.extractionProvenanceMethodProperty).to.equal('method');
+        expect(element.extractionProvenanceTextProperty).to.equal('text');
         expect(element.detailsProperty).to.deep.equal('details');
         expect(element.detailHighlightedTextProperty).to.equal('highlightedText');
         expect(element.detailLinkProperty).to.equal('link');
@@ -78,15 +84,19 @@ limitations under the License.
         expect(element.prettyNameSingular).to.equal('Result');
       });
 
-      test('does have paginated-list element', function() {
+      test('does have a paginated-list element', function() {
         expect(element.$$('paginated-list')).to.exist;
       });
 
-      test('does not have single-result element', function() {
+      test('does not have a single-result element', function() {
         expect(element.$$('single-result')).to.not.exist;
       });
 
-      test('_createHeader does return header correctly', function() {
+      test('does not have a build-and-run-query element', function() {
+        expect(element.$$('build-and-run-query')).to.not.exist;
+      });
+
+      test('_createHeader does return header as expected', function() {
         expect(element._createHeader).to.be.a('Function');
         expect(element._createHeader('singular', 'plural', 0, 0, false)).to.equal('No plural');
         expect(element._createHeader('singular', 'plural', 1, 0, false)).to.equal('1 singular');
@@ -98,7 +108,35 @@ limitations under the License.
         expect(element._createHeader('singular', 'plural', 10, 0, true)).to.equal('10 plural');
       });
 
-      test('_getString does return correctly', function() {
+      test('_createRepeatList does return as expected', function() {
+        expect(element._createRepeatList).to.be.a('Function');
+        expect(element._createRepeatList([])).to.deep.equal([]);
+        expect(element._createRepeatList([{
+          id: 'id1'
+        }])).to.deep.equal([{
+          result: {
+            id: 'id1'
+          },
+          selected: 0
+        }]);
+        expect(element._createRepeatList([{
+          id: 'id1'
+        }, {
+          id: 'id2'
+        }])).to.deep.equal([{
+          result: {
+            id: 'id1'
+          },
+          selected: 0
+        }, {
+          result: {
+            id: 'id2'
+          },
+          selected: 0
+        }]);
+      });
+
+      test('_getString does return as expected', function() {
         expect(element._getString).to.be.a('Function');
         expect(element._getString({}, 'property')).to.equal('');
         expect(element._getString({
@@ -112,7 +150,7 @@ limitations under the License.
         }, 'property')).to.equal('text');
       });
 
-      test('_getList does return correctly', function() {
+      test('_getList does return as expected', function() {
         expect(element._getList).to.be.a('Function');
         expect(element._getList({}, 'property')).to.deep.equal([]);
         expect(element._getList({
@@ -141,6 +179,42 @@ limitations under the License.
           property: [[1], [2, 3]]
         }, 'property')).to.deep.equal([[1], [2, 3]]);
       });
+
+      test('_shouldRunCachedPageQuery does return as expected', function() {
+        expect(element._shouldRunCachedPageQuery).to.be.a('Function');
+        expect(element._shouldRunCachedPageQuery(0)).to.be.false;
+        expect(element._shouldRunCachedPageQuery(1)).to.be.true;
+        expect(element._shouldRunCachedPageQuery(2)).to.be.false;
+      });
+
+      test('setting shownResults does update _repeatList', function() {
+        element.shownResults = [{
+          id: 'id1'
+        }];
+        expect(element._repeatList).to.deep.equal([{
+          result: {
+            id: 'id1'
+          },
+          selected: 0
+        }]);
+
+        element.shownResults = [{
+          id: 'id2'
+        }, {
+          id: 'id3'
+        }];
+        expect(element._repeatList).to.deep.equal([{
+          result: {
+            id: 'id2'
+          },
+          selected: 0
+        }, {
+          result: {
+            id: 'id3'
+          },
+          selected: 0
+        }]);
+      });
     });
 
     suite('result-list tests with results', function() {
@@ -149,79 +223,275 @@ limitations under the License.
       setup(function(done) {
         element = fixture('result-list-fixture');
         element.queryResults = [{
-          text: 'myText'
-        }];
-        element.totalResults = 2;
-        element.pageSize = 1;
+          flag: 'flag1',
+          highlightedText: 'highlightedText1',
+          icon: 'icon1',
+          id: 'id1',
+          link: 'link1',
+          rank: 'rank1',
+          styleClass: 'styleClass1',
+          text: 'text1',
+          headerExtractions: [{
+            text: 'headerExtraction1'
+          }],
+          detailExtractions: [{
+            text: 'detailExtraction1'
+          }],
+          details: [{
+            text: 'detail1',
+          }],
+          images: [{
+            text: 'image1'
+          }]
+        }, {}];
+        element.totalResults = 4;
+        element.pageSize = 2;
         flush(done);
       });
 
-      test('default properties are set correctly', function() {
-        expect(element.page).to.equal(1);
-        expect(element.loading).to.be.false;
-        expect(element.flagProperty).to.equal('flag');
-        expect(element.highlightedTextProperty).to.equal('highlightedText');
-        expect(element.iconProperty).to.equal('icon');
-        expect(element.linkProperty).to.equal('link');
-        expect(element.rankProperty).to.equal('rank');
-        expect(element.styleClassProperty).to.equal('styleClass');
-        expect(element.textProperty).to.equal('text');
-        expect(element.typeProperty).to.equal('type');
-        expect(element.headerExtractionsProperty).to.deep.equal('headerExtractions');
-        expect(element.detailExtractionsProperty).to.deep.equal('detailExtractions');
-        expect(element.extractionDataProperty).to.equal('data');
-        expect(element.extractionDataConfidenceProperty).to.equal('confidence');
-        expect(element.extractionDataHighlightProperty).to.equal('highlight');
-        expect(element.extractionDataIconProperty).to.equal('icon');
-        expect(element.extractionDataLinkProperty).to.equal('link');
-        expect(element.extractionDataStyleClassProperty).to.equal('styleClass');
-        expect(element.extractionDataTextProperty).to.equal('text');
-        expect(element.extractionNameProperty).to.equal('name');
-        expect(element.detailsProperty).to.deep.equal('details');
-        expect(element.detailHighlightedTextProperty).to.equal('highlightedText');
-        expect(element.detailLinkProperty).to.equal('link');
-        expect(element.detailNameProperty).to.equal('name');
-        expect(element.detailTextProperty).to.equal('text');
-        expect(element.imagesProperty).to.deep.equal('images');
-        expect(element.imageLinkProperty).to.equal('link');
-        expect(element.imageSourceProperty).to.equal('source');
-        expect(element.smallImageStyleClass).to.equal('');
-        expect(element.largeImageStyleClass).to.equal('');
-        expect(element.highlightedTextTags).to.equal('em');
-        expect(element.newTab).to.be.false;
-        expect(element.prettyName).to.equal('Results');
-        expect(element.prettyNameSingular).to.equal('Result');
-      });
-
-      test('other properties are set correctly', function() {
-        expect(element.pageSize).to.equal(1);
+      test('paginated-list properties are set as expected', function() {
+        expect(element.pageSize).to.equal(2);
         expect(element.queryResults).to.deep.equal([{
-          text: 'myText'
-        }]);
-        expect(element.totalResults).to.equal(2);
+          flag: 'flag1',
+          highlightedText: 'highlightedText1',
+          icon: 'icon1',
+          id: 'id1',
+          link: 'link1',
+          rank: 'rank1',
+          styleClass: 'styleClass1',
+          text: 'text1',
+          headerExtractions: [{
+            text: 'headerExtraction1'
+          }],
+          detailExtractions: [{
+            text: 'detailExtraction1'
+          }],
+          details: [{
+            text: 'detail1',
+          }],
+          images: [{
+            text: 'image1'
+          }]
+        }, {}]);
+        expect(element.totalResults).to.equal(4);
         expect(element.shownResults).to.deep.equal([{
-          text: 'myText'
-        }]);
-        expect(element.header).to.equal('1 of 2 Results');
+          flag: 'flag1',
+          highlightedText: 'highlightedText1',
+          icon: 'icon1',
+          id: 'id1',
+          link: 'link1',
+          rank: 'rank1',
+          styleClass: 'styleClass1',
+          text: 'text1',
+          headerExtractions: [{
+            text: 'headerExtraction1'
+          }],
+          detailExtractions: [{
+            text: 'detailExtraction1'
+          }],
+          details: [{
+            text: 'detail1',
+          }],
+          images: [{
+            text: 'image1'
+          }]
+        }, {}]);
       });
 
-      test('does have paginated-list element', function() {
+      test('result-list properties are set as expected', function() {
+        expect(element.header).to.equal('2 of 4 Results');
+        expect(element._repeatList).to.deep.equal([{
+          result: {
+            flag: 'flag1',
+            highlightedText: 'highlightedText1',
+            icon: 'icon1',
+            id: 'id1',
+            link: 'link1',
+            rank: 'rank1',
+            styleClass: 'styleClass1',
+            text: 'text1',
+            headerExtractions: [{
+              text: 'headerExtraction1'
+            }],
+            detailExtractions: [{
+              text: 'detailExtraction1'
+            }],
+            details: [{
+              text: 'detail1',
+            }],
+            images: [{
+              text: 'image1'
+            }]
+          },
+          selected: 0
+        }, {
+          result: {},
+          selected: 0
+        }]);
+      });
+
+      test('does have a paginated-list element', function() {
         expect(element.$$('paginated-list')).to.exist;
         expect(element.$$('paginated-list').loading).to.be.false;
         expect(element.$$('paginated-list').loadType).to.equal('Results');
         expect(element.$$('paginated-list').page).to.equal(1);
-        expect(element.$$('paginated-list').pageSize).to.equal(1);
-        expect(element.$$('paginated-list').totalItems).to.equal(2);
+        expect(element.$$('paginated-list').pageSize).to.equal(2);
+        expect(element.$$('paginated-list').totalItems).to.equal(4);
         expect(element.$$('paginated-list').items).to.deep.equal([{
-          text: 'myText'
-        }]);
+          flag: 'flag1',
+          highlightedText: 'highlightedText1',
+          icon: 'icon1',
+          id: 'id1',
+          link: 'link1',
+          rank: 'rank1',
+          styleClass: 'styleClass1',
+          text: 'text1',
+          headerExtractions: [{
+            text: 'headerExtraction1'
+          }],
+          detailExtractions: [{
+            text: 'detailExtraction1'
+          }],
+          details: [{
+            text: 'detail1',
+          }],
+          images: [{
+            text: 'image1'
+          }]
+        }, {}]);
         expect(element.$$('paginated-list').shownItems).to.deep.equal([{
-          text: 'myText'
-        }]);
+          flag: 'flag1',
+          highlightedText: 'highlightedText1',
+          icon: 'icon1',
+          id: 'id1',
+          link: 'link1',
+          rank: 'rank1',
+          styleClass: 'styleClass1',
+          text: 'text1',
+          headerExtractions: [{
+            text: 'headerExtraction1'
+          }],
+          detailExtractions: [{
+            text: 'detailExtraction1'
+          }],
+          details: [{
+            text: 'detail1',
+          }],
+          images: [{
+            text: 'image1'
+          }]
+        }, {}]);
       });
 
-      test('does have single-result element', function() {
-        expect(element.$$('single-result')).to.exist;
+      test('does have two single-result elements', function() {
+        var results = Polymer.dom(element.root).querySelectorAll('single-result');
+        expect(results.length).to.equal(2);
+        expect(results[0].flag).to.equal('flag1');
+        expect(results[0].highlightedText).to.equal('highlightedText1');
+        expect(results[0].icon).to.equal('icon1');
+        expect(results[0].link).to.equal('link1');
+        expect(results[0].rank).to.equal('rank1');
+        expect(results[0].resultId).to.equal('id1');
+        expect(results[0].styleClass).to.equal('styleClass1');
+        expect(results[0].text).to.equal('text1');
+        expect(results[0].headerExtractions).to.deep.equal([{
+          text: 'headerExtraction1'
+        }]);
+        expect(results[0].detailExtractions).to.deep.equal([{
+          text: 'detailExtraction1'
+        }]);
+        expect(results[0].details).to.deep.equal([{
+          text: 'detail1'
+        }]);
+        expect(results[0].images).to.deep.equal([{
+          text: 'image1'
+        }]);
+        expect(results[0].extractionDataClassificationsProperty).to.equal('classifications');
+        expect(results[0].extractionDataHighlightProperty).to.equal('highlight');
+        expect(results[0].extractionDataIconProperty).to.equal('icon');
+        expect(results[0].extractionDataIdProperty).to.equal('id');
+        expect(results[0].extractionDataLinkProperty).to.equal('link');
+        expect(results[0].extractionDataProvenancesProperty).to.equal('provenances');
+        expect(results[0].extractionDataStyleClassProperty).to.equal('styleClass');
+        expect(results[0].extractionDataTextProperty).to.equal('text');
+        expect(results[0].extractionNameProperty).to.equal('name');
+        expect(results[0].extractionProvenanceMethodProperty).to.equal('method');
+        expect(results[0].extractionProvenanceTextProperty).to.equal('text');
+        expect(results[0].detailHighlightedTextProperty).to.equal('highlightedText');
+        expect(results[0].detailLinkProperty).to.equal('link');
+        expect(results[0].detailNameProperty).to.equal('name');
+        expect(results[0].detailTextProperty).to.equal('text');
+        expect(results[0].imageLinkProperty).to.equal('link');
+        expect(results[0].imageSourceProperty).to.equal('source');
+        expect(results[0].smallImageStyleClass).to.equal('');
+        expect(results[0].largeImageStyleClass).to.equal('');
+
+        expect(results[1].flag).to.equal('');
+        expect(results[1].highlightedText).to.equal('');
+        expect(results[1].icon).to.equal('');
+        expect(results[1].link).to.equal('');
+        expect(results[1].rank).to.equal('');
+        expect(results[1].resultId).to.equal('');
+        expect(results[1].styleClass).to.equal('');
+        expect(results[1].text).to.equal('');
+        expect(results[1].type).to.equal('');
+        expect(results[1].headerExtractions).to.deep.equal([]);
+        expect(results[1].detailExtractions).to.deep.equal([]);
+        expect(results[1].details).to.deep.equal([]);
+        expect(results[1].images).to.deep.equal([]);
+        expect(results[1].extractionDataClassificationsProperty).to.equal('classifications');
+        expect(results[1].extractionDataHighlightProperty).to.equal('highlight');
+        expect(results[1].extractionDataIconProperty).to.equal('icon');
+        expect(results[1].extractionDataIdProperty).to.equal('id');
+        expect(results[1].extractionDataLinkProperty).to.equal('link');
+        expect(results[1].extractionDataProvenancesProperty).to.equal('provenances');
+        expect(results[1].extractionDataStyleClassProperty).to.equal('styleClass');
+        expect(results[1].extractionDataTextProperty).to.equal('text');
+        expect(results[1].extractionNameProperty).to.equal('name');
+        expect(results[1].extractionProvenanceMethodProperty).to.equal('method');
+        expect(results[1].extractionProvenanceTextProperty).to.equal('text');
+        expect(results[1].detailHighlightedTextProperty).to.equal('highlightedText');
+        expect(results[1].detailLinkProperty).to.equal('link');
+        expect(results[1].detailNameProperty).to.equal('name');
+        expect(results[1].detailTextProperty).to.equal('text');
+        expect(results[1].imageLinkProperty).to.equal('link');
+        expect(results[1].imageSourceProperty).to.equal('source');
+        expect(results[1].smallImageStyleClass).to.equal('');
+        expect(results[1].largeImageStyleClass).to.equal('');
+      });
+
+      test('does not have a build-and-run-query element because result.selected=0', function() {
+        expect(element.$$('build-and-run-query')).to.not.exist;
+      });
+
+      test('does have a build-and-run-query element if result.selected=1', function(done) {
+        element.cacheTransform = function() {};
+        element.indexName = 'testIndexName';
+        element.indexTypes = ['testIndexType'];
+        element.searchFields = {
+          field: 'value'
+        };
+        element.sourceExclude = ['exclude'];
+        element.sourceInclude = ['include'];
+
+        element.set('_repeatList.0.selected', 1);
+
+        flush(function() {
+          expect(element.$$('build-and-run-query')).to.exist;
+          expect(element.$$('build-and-run-query').fields).to.equal('doc_id');
+          expect(element.$$('build-and-run-query').values).to.equal('id1');
+          expect(element.$$('build-and-run-query').indexName).to.equal('testIndexName');
+          expect(element.$$('build-and-run-query').indexTypes).to.deep.equal(['testIndexType']);
+          expect(element.$$('build-and-run-query').aggregations).to.deep.equal([]);
+          expect(element.$$('build-and-run-query').filters).to.deep.equal([]);
+          expect(element.$$('build-and-run-query').sourceExclude).to.deep.equal(['exclude']);
+          expect(element.$$('build-and-run-query').sourceInclude).to.deep.equal(['include']);
+          expect(element.$$('build-and-run-query').transformConfig).to.deep.equal({
+            field: 'value'
+          });
+          expect(element.$$('build-and-run-query').transformFunction).to.deep.equal(element.cacheTransform);
+          done();
+        });
       });
     });
   </script>

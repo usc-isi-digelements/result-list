@@ -1,7 +1,7 @@
 {
   "name": "result-list",
   "description": "A Polymer Element showing a paginated-list of single-result elements.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -17,8 +17,9 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.7.0",
+    "build-and-run-query": "DigElements/build-and-run-query#1.0.9",
     "paginated-list": "DigElements/paginated-list#1.0.6",
-    "single-result": "DigElements/single-result#1.0.5"
+    "single-result": "DigElements/single-result#1.0.6"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.1.7",
