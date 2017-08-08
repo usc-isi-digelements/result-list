@@ -1,7 +1,7 @@
 {
   "name": "result-list",
   "description": "A Polymer Element showing a paginated-list of single-result elements.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [

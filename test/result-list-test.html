@@ -52,6 +52,7 @@ limitations under the License.
         expect(element.rankProperty).to.equal('rank');
         expect(element.styleClassProperty).to.equal('styleClass');
         expect(element.textProperty).to.equal('text');
+        expect(element.tagsProperty).to.equal('tags');
         expect(element.typeProperty).to.equal('type');
         expect(element.headerExtractionsProperty).to.deep.equal('headerExtractions');
         expect(element.detailExtractionsProperty).to.deep.equal('detailExtractions');
@@ -230,6 +231,9 @@ limitations under the License.
           link: 'link1',
           rank: 'rank1',
           styleClass: 'styleClass1',
+          tags: {
+            tag1: {}
+          },
           text: 'text1',
           headerExtractions: [{
             text: 'headerExtraction1'
@@ -259,6 +263,9 @@ limitations under the License.
           link: 'link1',
           rank: 'rank1',
           styleClass: 'styleClass1',
+          tags: {
+            tag1: {}
+          },
           text: 'text1',
           headerExtractions: [{
             text: 'headerExtraction1'
@@ -282,6 +289,9 @@ limitations under the License.
           link: 'link1',
           rank: 'rank1',
           styleClass: 'styleClass1',
+          tags: {
+            tag1: {}
+          },
           text: 'text1',
           headerExtractions: [{
             text: 'headerExtraction1'
@@ -309,6 +319,9 @@ limitations under the License.
             link: 'link1',
             rank: 'rank1',
             styleClass: 'styleClass1',
+            tags: {
+              tag1: {}
+            },
             text: 'text1',
             headerExtractions: [{
               text: 'headerExtraction1'
@@ -345,6 +358,9 @@ limitations under the License.
           link: 'link1',
           rank: 'rank1',
           styleClass: 'styleClass1',
+          tags: {
+            tag1: {}
+          },
           text: 'text1',
           headerExtractions: [{
             text: 'headerExtraction1'
@@ -367,6 +383,9 @@ limitations under the License.
           link: 'link1',
           rank: 'rank1',
           styleClass: 'styleClass1',
+          tags: {
+            tag1: {}
+          },
           text: 'text1',
           headerExtractions: [{
             text: 'headerExtraction1'
@@ -393,6 +412,9 @@ limitations under the License.
         expect(results[0].rank).to.equal('rank1');
         expect(results[0].resultId).to.equal('id1');
         expect(results[0].styleClass).to.equal('styleClass1');
+        expect(results[0].tags).to.deep.equal({
+          tag1: {}
+        });
         expect(results[0].text).to.equal('text1');
         expect(results[0].headerExtractions).to.deep.equal([{
           text: 'headerExtraction1'
@@ -433,6 +455,7 @@ limitations under the License.
         expect(results[1].rank).to.equal('');
         expect(results[1].resultId).to.equal('');
         expect(results[1].styleClass).to.equal('');
+        expect(results[1].tags).to.not.exist;
         expect(results[1].text).to.equal('');
         expect(results[1].type).to.equal('');
         expect(results[1].headerExtractions).to.deep.equal([]);

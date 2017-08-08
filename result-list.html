@@ -146,6 +146,7 @@ results = [{
           rank="[[_getString(item.result, rankProperty)]]"
           result-id="[[_getString(item.result, idProperty)]]"
           style-class="[[_getString(item.result, styleClassProperty)]]"
+          tags="[[_getProperty(item.result, tagsProperty)]]"
           text="[[_getString(item.result, textProperty)]]"
           type="[[_getString(item.result, typeProperty)]]"
           header-extractions="[[_getList(item.result, headerExtractionsProperty)]]"
@@ -339,6 +340,19 @@ results = [{
         styleClassProperty: {
           type: String,
           value: 'styleClass'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The tags property in the result objects.
+         *
+         * @type {String}
+         * @default 'tags'
+         */
+        tagsProperty: {
+          type: String,
+          value: 'tags'
         },
 
         /**
@@ -941,6 +955,18 @@ results = [{
        */
       _getList: function(item, property) {
         return (item ? item[property] : undefined) || [];
+      },
+
+      /**
+       * Returns the given property in the given item.
+       *
+       * @param {Object} item
+       * @param {String} property
+       * @return {Object}
+       * @private
+       */
+      _getProperty: function(item, property) {
+        return item[property];
       },
 
       /**
