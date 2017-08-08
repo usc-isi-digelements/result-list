@@ -160,6 +160,7 @@ results = [{
           extraction-data-provenances-property="[[extractionDataProvenancesProperty]]"
           extraction-data-style-class-property="[[extractionDataStyleClassProperty]]"
           extraction-data-text-property="[[extractionDataTextProperty]]"
+          extraction-data-type-property="[[extractionDataTypeProperty]]"
           extraction-name-property="[[extractionNameProperty]]"
           extraction-provenance-highlight-tag="[[extractionProvenanceHighlightTag]]"
           extraction-provenance-method-property="[[extractionProvenanceMethodProperty]]"
@@ -177,7 +178,7 @@ results = [{
           highlighted-text-tags="[[highlightedTextTags]]"
           new-tab="[[newTab]]"
           tag-manager="[[tagManager]]"
-          selected="{{item.selected}}">
+          selected-tab="{{item.selected}}">
         </single-result>
       </template>
     </paginated-list>
@@ -535,6 +536,19 @@ results = [{
         extractionDataTextProperty: {
           type: String,
           value: 'text'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The type property in the data objects from the extraction objects.
+         *
+         * @type {String}
+         * @default 'type'
+         */
+        extractionDataTypeProperty: {
+          type: String,
+          value: 'type'
         },
 
         /**
