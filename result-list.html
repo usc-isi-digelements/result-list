@@ -79,6 +79,17 @@ results = [{
 </result-list>
 ```
 
+### Styling
+
+`<result-list>` provides the following custom properties and mixins for styling:
+
+Custom property                  | Description                                | Default
+---------------------------------|--------------------------------------------|--------
+`--result-list-loading-spinner`  | Mixin applied to the loading-spinner       | none
+`--result-list-max-height`       | Maximum height of the list                 | 1500px
+`--result-list-scroll-threshold` | Mixin applied to the iron-scroll-threshold | none
+`--result-list-show-more-button` | Mixin applied to the show more button      | none
+
 @demo demo/index.html
 -->
 
@@ -91,7 +102,10 @@ results = [{
       }
 
       paginated-list {
+        --paginated-list-loading-spinner: var(--result-list-loading-spinner);
         --paginated-list-max-height: var(--result-list-max-height, 1500px);
+        --paginated-list-scroll-threshold: var(--result-list-scroll-threshold);
+        --paginated-list-show-more-button: var(--result-list-show-more-button);
       }
 
       single-result:first-of-type {

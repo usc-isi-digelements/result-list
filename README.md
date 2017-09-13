@@ -1,7 +1,5 @@
 # result-list
 
-### Dependencies
-
 A Polymer Element showing a paginated-list of single-result elements.
 
 ### Example
@@ -60,6 +58,19 @@ results = [{
   header="{{header}}">
 </result-list>
 ```
+
+### Styling
+
+`<result-list>` provides the following custom properties and mixins for styling:
+
+Custom property                  | Description                                | Default
+---------------------------------|--------------------------------------------|--------
+`--result-list-loading-spinner`  | Mixin applied to the loading-spinner       | none
+`--result-list-max-height`       | Maximum height of the list                 | 1500px
+`--result-list-scroll-threshold` | Mixin applied to the iron-scroll-threshold | none
+`--result-list-show-more-button` | Mixin applied to the show more button      | none
+
+### Dependencies
 
 Dependencies are installed using [Bower](http://bower.io/):
 
