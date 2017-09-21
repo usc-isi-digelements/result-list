@@ -484,6 +484,7 @@ limitations under the License.
       test('does have a confidence-dialog element', function() {
         expect(element.$$('confidence-dialog')).to.exist;
         expect(element.$$('confidence-dialog').id).to.equal('confidenceDialog');
+        expect(element.$$('confidence-dialog').confidence).to.not.exist;
         expect(element.$$('confidence-dialog').documentId).to.not.exist;
         expect(element.$$('confidence-dialog').highlightTag).to.equal('etk');
         expect(element.$$('confidence-dialog').provenanceMethodProperty).to.equal('method');
@@ -527,6 +528,7 @@ limitations under the License.
 
       test('setting _showProvenances does set the properties of the confidence-dialog element', function() {
         element._showProvenances = {
+          confidence: 100,
           data: [{
             method: 'provenanceMethod',
             text: 'provenanceText'
@@ -535,6 +537,7 @@ limitations under the License.
         };
 
         expect(element.$$('confidence-dialog')).to.exist;
+        expect(element.$$('confidence-dialog').confidence).to.equal(100);
         expect(element.$$('confidence-dialog').documentId).to.equal('1234');
         expect(element.$$('confidence-dialog').provenances).to.deep.equal([{
           method: 'provenanceMethod',
