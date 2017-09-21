@@ -16,6 +16,7 @@ limitations under the License.
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../build-and-run-query/build-and-run-query.html">
+<link rel="import" href="../confidence-marker/confidence-dialog.html">
 <link rel="import" href="../paginated-list/paginated-list.html">
 <link rel="import" href="../single-result/single-result.html">
 
@@ -175,9 +176,6 @@ Custom property                  | Description                                | 
           extraction-data-text-property="[[extractionDataTextProperty]]"
           extraction-data-type-property="[[extractionDataTypeProperty]]"
           extraction-name-property="[[extractionNameProperty]]"
-          extraction-provenance-highlight-tag="[[extractionProvenanceHighlightTag]]"
-          extraction-provenance-method-property="[[extractionProvenanceMethodProperty]]"
-          extraction-provenance-text-property="[[extractionProvenanceTextProperty]]"
           details="[[_getList(item.result, detailsProperty)]]"
           detail-highlighted-text-property="[[detailHighlightedTextProperty]]"
           detail-link-property="[[detailLinkProperty]]"
@@ -190,11 +188,20 @@ Custom property                  | Description                                | 
           large-image-style-class="[[largeImageStyleClass]]"
           highlighted-text-tags="[[highlightedTextTags]]"
           new-tab="[[newTab]]"
+          show-provenances="{{_showProvenances}}"
           tag-manager="[[tagManager]]"
           selected-tab="{{item.selected}}">
         </single-result>
       </template>
     </paginated-list>
+
+    <confidence-dialog id="confidenceDialog"
+      document-id="[[_showProvenances.id]]"
+      highlight-tag="[[extractionProvenanceHighlightTag]]"
+      provenance-method-property="[[extractionProvenanceMethodProperty]]"
+      provenance-text-property="[[extractionProvenanceTextProperty]]"
+      provenances="[[_showProvenances.data]]">
+    </confidence-dialog>
   </template>
 
   <script>
@@ -926,6 +933,21 @@ Custom property                  | Description                                | 
         _repeatList: {
           computed: '_createRepeatList(shownResults)',
           type: Array
+        },
+
+        /**
+         * The provenance data and result ID to show in the confidence/provenance dialog.  An object containing {Array} data and {Number|String} id.
+         *
+         * @type {Object}
+         * @default {}
+         * @private
+         */
+        _showProvenances: {
+          observer: '_openConfidenceDialog',
+          type: Object,
+          value: function() {
+            return {};
+          }
         }
       },
 
@@ -1006,6 +1028,17 @@ Custom property                  | Description                                | 
        */
       _getString: function(item, property) {
         return (item ? item[property] : undefined) || '';
+      },
+
+      /**
+       * Opens the confidence/provenance dialog.
+       *
+       * @private
+       */
+      _openConfidenceDialog: function() {
+        if(this._showProvenances && this._showProvenances.id) {
+          this.$$('#confidenceDialog').open();
+        }
       },
 
       /**

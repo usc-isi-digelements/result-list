@@ -68,8 +68,6 @@ limitations under the License.
         expect(element.extractionDataTextProperty).to.equal('text');
         expect(element.extractionDataTypeProperty).to.equal('type');
         expect(element.extractionNameProperty).to.equal('name');
-        expect(element.extractionProvenanceMethodProperty).to.equal('method');
-        expect(element.extractionProvenanceTextProperty).to.equal('text');
         expect(element.detailsProperty).to.deep.equal('details');
         expect(element.detailHighlightedTextProperty).to.equal('highlightedText');
         expect(element.detailLinkProperty).to.equal('link');
@@ -84,6 +82,7 @@ limitations under the License.
         expect(element.newTab).to.be.false;
         expect(element.prettyName).to.equal('Results');
         expect(element.prettyNameSingular).to.equal('Result');
+        expect(element._showProvenances).to.deep.equal({});
       });
 
       test('does have a paginated-list element', function() {
@@ -439,8 +438,6 @@ limitations under the License.
         expect(results[0].extractionDataTextProperty).to.equal('text');
         expect(results[0].extractionDataTypeProperty).to.equal('type');
         expect(results[0].extractionNameProperty).to.equal('name');
-        expect(results[0].extractionProvenanceMethodProperty).to.equal('method');
-        expect(results[0].extractionProvenanceTextProperty).to.equal('text');
         expect(results[0].detailHighlightedTextProperty).to.equal('highlightedText');
         expect(results[0].detailLinkProperty).to.equal('link');
         expect(results[0].detailNameProperty).to.equal('name');
@@ -474,8 +471,6 @@ limitations under the License.
         expect(results[1].extractionDataTextProperty).to.equal('text');
         expect(results[1].extractionDataTypeProperty).to.equal('type');
         expect(results[1].extractionNameProperty).to.equal('name');
-        expect(results[1].extractionProvenanceMethodProperty).to.equal('method');
-        expect(results[1].extractionProvenanceTextProperty).to.equal('text');
         expect(results[1].detailHighlightedTextProperty).to.equal('highlightedText');
         expect(results[1].detailLinkProperty).to.equal('link');
         expect(results[1].detailNameProperty).to.equal('name');
@@ -484,6 +479,16 @@ limitations under the License.
         expect(results[1].imageSourceProperty).to.equal('source');
         expect(results[1].smallImageStyleClass).to.equal('');
         expect(results[1].largeImageStyleClass).to.equal('');
+      });
+
+      test('does have a confidence-dialog element', function() {
+        expect(element.$$('confidence-dialog')).to.exist;
+        expect(element.$$('confidence-dialog').id).to.equal('confidenceDialog');
+        expect(element.$$('confidence-dialog').documentId).to.not.exist;
+        expect(element.$$('confidence-dialog').highlightTag).to.equal('etk');
+        expect(element.$$('confidence-dialog').provenanceMethodProperty).to.equal('method');
+        expect(element.$$('confidence-dialog').provenanceTextProperty).to.equal('text');
+        expect(element.$$('confidence-dialog').provenances).to.not.exist;
       });
 
       test('does not have a build-and-run-query element because result.selected=0', function() {
@@ -518,6 +523,23 @@ limitations under the License.
           expect(element.$$('build-and-run-query').transformFunction).to.deep.equal(element.cacheTransform);
           done();
         });
+      });
+
+      test('setting _showProvenances does set the properties of the confidence-dialog element', function() {
+        element._showProvenances = {
+          data: [{
+            method: 'provenanceMethod',
+            text: 'provenanceText'
+          }],
+          id: '1234'
+        };
+
+        expect(element.$$('confidence-dialog')).to.exist;
+        expect(element.$$('confidence-dialog').documentId).to.equal('1234');
+        expect(element.$$('confidence-dialog').provenances).to.deep.equal([{
+          method: 'provenanceMethod',
+          text: 'provenanceText'
+        }]);
       });
     });
   </script>
