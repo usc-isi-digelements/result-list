@@ -130,7 +130,7 @@ Custom property                  | Description                                | 
       page-size="[[pageSize]]"
       shown-items="{{shownResults}}">
 
-      <template is="dom-repeat" items="[[_repeatList]]" initial-count="25">
+      <template is="dom-repeat" items="[[_repeatList]]" initial-count="10">
         <template is="dom-if" if="[[_shouldRunCachedPageQuery(item.selected)]]">
           <build-and-run-query
             fields='"doc_id"'
