@@ -175,6 +175,7 @@ Custom property                  | Description                                | 
           extraction-data-style-class-property="[[extractionDataStyleClassProperty]]"
           extraction-data-text-property="[[extractionDataTextProperty]]"
           extraction-data-type-property="[[extractionDataTypeProperty]]"
+          extraction-data-width-property="[[extractionDataWidthProperty]]"
           extraction-name-property="[[extractionNameProperty]]"
           details="[[_getList(item.result, detailsProperty)]]"
           detail-highlighted-text-property="[[detailHighlightedTextProperty]]"
@@ -570,6 +571,19 @@ Custom property                  | Description                                | 
         extractionDataTypeProperty: {
           type: String,
           value: 'type'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The width property in the data objects from the extraction objects.
+         *
+         * @type {String}
+         * @default 'width'
+         */
+        extractionDataWidthProperty: {
+          type: String,
+          value: 'width'
         },
 
         /**
