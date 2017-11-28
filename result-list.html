@@ -102,7 +102,10 @@ Custom property                  | Description                                | 
       }
 
       paginated-list {
-        --paginated-list-loading-spinner: var(--result-list-loading-spinner);
+        --paginated-list-loading-spinner: {
+          margin: 5px;
+          @apply --result-list-loading-spinner;
+        };
         --paginated-list-max-height: var(--result-list-max-height, 1500px);
         --paginated-list-scroll-threshold: var(--result-list-scroll-threshold);
         --paginated-list-show-more-button: var(--result-list-show-more-button);
