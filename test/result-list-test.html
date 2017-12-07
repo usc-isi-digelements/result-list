@@ -49,6 +49,7 @@ limitations under the License.
         expect(element.iconProperty).to.equal('icon');
         expect(element.idProperty).to.equal('id');
         expect(element.linkProperty).to.equal('link');
+        expect(element.nameProperty).to.equal('name');
         expect(element.rankProperty).to.equal('rank');
         expect(element.styleClassProperty).to.equal('styleClass');
         expect(element.textProperty).to.equal('text');
@@ -56,6 +57,7 @@ limitations under the License.
         expect(element.typeProperty).to.equal('type');
         expect(element.headerExtractionsProperty).to.deep.equal('headerExtractions');
         expect(element.detailExtractionsProperty).to.deep.equal('detailExtractions');
+        expect(element.nestedExtractionsProperty).to.deep.equal('nestedExtractions');
         expect(element.extractionDataProperty).to.equal('data');
         expect(element.extractionDataClassificationsProperty).to.equal('classifications');
         expect(element.extractionDataConfidenceProperty).to.equal('confidence');
@@ -68,6 +70,7 @@ limitations under the License.
         expect(element.extractionDataTextProperty).to.equal('text');
         expect(element.extractionDataTypeProperty).to.equal('type');
         expect(element.extractionDataWidthProperty).to.equal('width');
+        expect(element.extractionIdProperty).to.equal('key');
         expect(element.extractionNameProperty).to.equal('name');
         expect(element.detailsProperty).to.deep.equal('details');
         expect(element.detailHighlightedTextProperty).to.equal('highlightedText');
@@ -94,6 +97,10 @@ limitations under the License.
         expect(element.$$('single-result')).to.not.exist;
       });
 
+      test('does not have a nested-list element', function() {
+        expect(element.$$('nested-list')).to.not.exist;
+      });
+
       test('does not have a build-and-run-query element', function() {
         expect(element.$$('build-and-run-query')).to.not.exist;
       });
@@ -116,6 +123,7 @@ limitations under the License.
         expect(element._createRepeatList([{
           id: 'id1'
         }])).to.deep.equal([{
+          opened: false,
           result: {
             id: 'id1'
           },
@@ -126,11 +134,13 @@ limitations under the License.
         }, {
           id: 'id2'
         }])).to.deep.equal([{
+          opened: false,
           result: {
             id: 'id1'
           },
           selected: 0
         }, {
+          opened: false,
           result: {
             id: 'id2'
           },
@@ -194,6 +204,7 @@ limitations under the License.
           id: 'id1'
         }];
         expect(element._repeatList).to.deep.equal([{
+          opened: false,
           result: {
             id: 'id1'
           },
@@ -206,11 +217,13 @@ limitations under the License.
           id: 'id3'
         }];
         expect(element._repeatList).to.deep.equal([{
+          opened: false,
           result: {
             id: 'id2'
           },
           selected: 0
         }, {
+          opened: false,
           result: {
             id: 'id3'
           },
@@ -230,6 +243,7 @@ limitations under the License.
           icon: 'icon1',
           id: 'id1',
           link: 'link1',
+          name: 'name1',
           rank: 'rank1',
           styleClass: 'styleClass1',
           tags: {
@@ -237,20 +251,44 @@ limitations under the License.
           },
           text: 'text1',
           headerExtractions: [{
-            text: 'headerExtraction1'
+            name: 'headerExtraction1'
           }],
           detailExtractions: [{
-            text: 'detailExtraction1'
+            name: 'detailExtraction1'
+          }],
+          nestedExtractions: [{
+            data: [{
+              text: 'nestedExtraction1'
+            }],
+            key: 'nestedExtractionType1',
+            name: 'Nested Extraction Type 1'
+          }, {
+            data: [{
+              text: 'nestedExtraction2'
+            }],
+            key: 'nestedExtractionType2',
+            name: 'Nested Extraction Type 2'
           }],
           details: [{
-            text: 'detail1',
+            name: 'detail1',
           }],
           images: [{
-            text: 'image1'
+            source: 'image1'
           }]
         }, {}];
         element.totalResults = 4;
         element.pageSize = 2;
+        element.idField = 'testIdField';
+        element.indexName = 'testIndexName';
+        element.indexTypes = ['testIndexType'];
+        element.newTab = true;
+        element.searchFields = {
+          field: 'value'
+        };
+        element.sourceIncludeCachedPage = ['cachedPageInclude'];
+        element.sourceIncludeNestedData = ['nestedDataInclude'];
+        element.transformCachedPage = function() {};
+        element.transformNestedData = function() {};
         flush(done);
       });
 
@@ -262,6 +300,7 @@ limitations under the License.
           icon: 'icon1',
           id: 'id1',
           link: 'link1',
+          name: 'name1',
           rank: 'rank1',
           styleClass: 'styleClass1',
           tags: {
@@ -269,16 +308,29 @@ limitations under the License.
           },
           text: 'text1',
           headerExtractions: [{
-            text: 'headerExtraction1'
+            name: 'headerExtraction1'
           }],
           detailExtractions: [{
-            text: 'detailExtraction1'
+            name: 'detailExtraction1'
+          }],
+          nestedExtractions: [{
+            data: [{
+              text: 'nestedExtraction1'
+            }],
+            key: 'nestedExtractionType1',
+            name: 'Nested Extraction Type 1'
+          }, {
+            data: [{
+              text: 'nestedExtraction2'
+            }],
+            key: 'nestedExtractionType2',
+            name: 'Nested Extraction Type 2'
           }],
           details: [{
-            text: 'detail1',
+            name: 'detail1',
           }],
           images: [{
-            text: 'image1'
+            source: 'image1'
           }]
         }, {}]);
         expect(element.totalResults).to.equal(4);
@@ -288,6 +340,7 @@ limitations under the License.
           icon: 'icon1',
           id: 'id1',
           link: 'link1',
+          name: 'name1',
           rank: 'rank1',
           styleClass: 'styleClass1',
           tags: {
@@ -295,16 +348,29 @@ limitations under the License.
           },
           text: 'text1',
           headerExtractions: [{
-            text: 'headerExtraction1'
+            name: 'headerExtraction1'
           }],
           detailExtractions: [{
-            text: 'detailExtraction1'
+            name: 'detailExtraction1'
+          }],
+          nestedExtractions: [{
+            data: [{
+              text: 'nestedExtraction1'
+            }],
+            key: 'nestedExtractionType1',
+            name: 'Nested Extraction Type 1'
+          }, {
+            data: [{
+              text: 'nestedExtraction2'
+            }],
+            key: 'nestedExtractionType2',
+            name: 'Nested Extraction Type 2'
           }],
           details: [{
-            text: 'detail1',
+            name: 'detail1',
           }],
           images: [{
-            text: 'image1'
+            source: 'image1'
           }]
         }, {}]);
       });
@@ -312,12 +378,14 @@ limitations under the License.
       test('result-list properties are set as expected', function() {
         expect(element.header).to.equal('2 of 4 Results');
         expect(element._repeatList).to.deep.equal([{
+          opened: false,
           result: {
             flag: 'flag1',
             highlightedText: 'highlightedText1',
             icon: 'icon1',
             id: 'id1',
             link: 'link1',
+            name: 'name1',
             rank: 'rank1',
             styleClass: 'styleClass1',
             tags: {
@@ -325,20 +393,34 @@ limitations under the License.
             },
             text: 'text1',
             headerExtractions: [{
-              text: 'headerExtraction1'
+              name: 'headerExtraction1'
             }],
             detailExtractions: [{
-              text: 'detailExtraction1'
+              name: 'detailExtraction1'
+            }],
+            nestedExtractions: [{
+              data: [{
+                text: 'nestedExtraction1'
+              }],
+              key: 'nestedExtractionType1',
+              name: 'Nested Extraction Type 1'
+            }, {
+              data: [{
+                text: 'nestedExtraction2'
+              }],
+              key: 'nestedExtractionType2',
+              name: 'Nested Extraction Type 2'
             }],
             details: [{
-              text: 'detail1',
+              name: 'detail1',
             }],
             images: [{
-              text: 'image1'
+              source: 'image1'
             }]
           },
           selected: 0
         }, {
+          opened: false,
           result: {},
           selected: 0
         }]);
@@ -357,6 +439,7 @@ limitations under the License.
           icon: 'icon1',
           id: 'id1',
           link: 'link1',
+          name: 'name1',
           rank: 'rank1',
           styleClass: 'styleClass1',
           tags: {
@@ -364,16 +447,29 @@ limitations under the License.
           },
           text: 'text1',
           headerExtractions: [{
-            text: 'headerExtraction1'
+            name: 'headerExtraction1'
           }],
           detailExtractions: [{
-            text: 'detailExtraction1'
+            name: 'detailExtraction1'
+          }],
+          nestedExtractions: [{
+            data: [{
+              text: 'nestedExtraction1'
+            }],
+            key: 'nestedExtractionType1',
+            name: 'Nested Extraction Type 1'
+          }, {
+            data: [{
+              text: 'nestedExtraction2'
+            }],
+            key: 'nestedExtractionType2',
+            name: 'Nested Extraction Type 2'
           }],
           details: [{
-            text: 'detail1',
+            name: 'detail1',
           }],
           images: [{
-            text: 'image1'
+            source: 'image1'
           }]
         }, {}]);
         expect(element.$$('paginated-list').shownItems).to.deep.equal([{
@@ -382,6 +478,7 @@ limitations under the License.
           icon: 'icon1',
           id: 'id1',
           link: 'link1',
+          name: 'name1',
           rank: 'rank1',
           styleClass: 'styleClass1',
           tags: {
@@ -389,16 +486,29 @@ limitations under the License.
           },
           text: 'text1',
           headerExtractions: [{
-            text: 'headerExtraction1'
+            name: 'headerExtraction1'
           }],
           detailExtractions: [{
-            text: 'detailExtraction1'
+            name: 'detailExtraction1'
+          }],
+          nestedExtractions: [{
+            data: [{
+              text: 'nestedExtraction1'
+            }],
+            key: 'nestedExtractionType1',
+            name: 'Nested Extraction Type 1'
+          }, {
+            data: [{
+              text: 'nestedExtraction2'
+            }],
+            key: 'nestedExtractionType2',
+            name: 'Nested Extraction Type 2'
           }],
           details: [{
-            text: 'detail1',
+            name: 'detail1',
           }],
           images: [{
-            text: 'image1'
+            source: 'image1'
           }]
         }, {}]);
       });
@@ -410,6 +520,7 @@ limitations under the License.
         expect(results[0].highlightedText).to.equal('highlightedText1');
         expect(results[0].icon).to.equal('icon1');
         expect(results[0].link).to.equal('link1');
+        expect(results[0].name).to.equal('name1');
         expect(results[0].rank).to.equal('rank1');
         expect(results[0].resultId).to.equal('id1');
         expect(results[0].styleClass).to.equal('styleClass1');
@@ -418,16 +529,16 @@ limitations under the License.
         });
         expect(results[0].text).to.equal('text1');
         expect(results[0].headerExtractions).to.deep.equal([{
-          text: 'headerExtraction1'
+          name: 'headerExtraction1'
         }]);
         expect(results[0].detailExtractions).to.deep.equal([{
-          text: 'detailExtraction1'
+          name: 'detailExtraction1'
         }]);
         expect(results[0].details).to.deep.equal([{
-          text: 'detail1'
+          name: 'detail1'
         }]);
         expect(results[0].images).to.deep.equal([{
-          text: 'image1'
+          source: 'image1'
         }]);
         expect(results[0].extractionDataClassificationsProperty).to.equal('classifications');
         expect(results[0].extractionDataHighlightProperty).to.equal('highlight');
@@ -448,11 +559,16 @@ limitations under the License.
         expect(results[0].imageSourceProperty).to.equal('source');
         expect(results[0].smallImageStyleClass).to.equal('');
         expect(results[0].largeImageStyleClass).to.equal('');
+        expect(results[0].newTab).to.be.true;
+        expect(results[0].selectedTab).to.equal(0);
+        expect(results[0].showProvenances).to.deep.equal({});
+        expect(results[0].open).to.be.false;
 
         expect(results[1].flag).to.equal('');
         expect(results[1].highlightedText).to.equal('');
         expect(results[1].icon).to.equal('');
         expect(results[1].link).to.equal('');
+        expect(results[1].name).to.equal('');
         expect(results[1].rank).to.equal('');
         expect(results[1].resultId).to.equal('');
         expect(results[1].styleClass).to.equal('');
@@ -462,7 +578,7 @@ limitations under the License.
         expect(results[1].headerExtractions).to.deep.equal([]);
         expect(results[1].detailExtractions).to.deep.equal([]);
         expect(results[1].details).to.deep.equal([]);
-        expect(results[1].images).to.deep.equal([]);
+        expect(results[1].images).to.not.exist;
         expect(results[1].extractionDataClassificationsProperty).to.equal('classifications');
         expect(results[1].extractionDataHighlightProperty).to.equal('highlight');
         expect(results[1].extractionDataIconProperty).to.equal('icon');
@@ -482,6 +598,107 @@ limitations under the License.
         expect(results[1].imageSourceProperty).to.equal('source');
         expect(results[1].smallImageStyleClass).to.equal('');
         expect(results[1].largeImageStyleClass).to.equal('');
+        expect(results[1].newTab).to.be.true;
+        expect(results[1].selectedTab).to.equal(0);
+        expect(results[1].showProvenances).to.deep.equal({});
+        expect(results[1].open).to.be.false;
+      });
+
+      test('does not have a nested-list element', function() {
+        expect(element.$$('nested-list')).to.not.exist;
+      });
+
+      test('does have a nested-list if a single-result with nestedExtractions is opened', function(done) {
+        element.set('_repeatList.0.opened', true);
+
+        flush(function() {
+          var lists = Polymer.dom(element.root).querySelectorAll('single-result > nested-list');
+          expect(lists.length).to.equal(2);
+
+          expect(lists[0].extractionData).to.deep.equal([{
+            text: 'nestedExtraction1'
+          }]);
+          expect(lists[0].extractionDataProperty).to.equal('data');
+          expect(lists[0].extractionDataClassificationsProperty).to.equal('classifications');
+          expect(lists[0].extractionDataHighlightProperty).to.equal('highlight');
+          expect(lists[0].extractionDataIconProperty).to.equal('icon');
+          expect(lists[0].extractionDataIdProperty).to.equal('id');
+          expect(lists[0].extractionDataLinkProperty).to.equal('link');
+          expect(lists[0].extractionDataProvenancesProperty).to.equal('provenances');
+          expect(lists[0].extractionDataStyleClassProperty).to.equal('styleClass');
+          expect(lists[0].extractionDataTextProperty).to.equal('text');
+          expect(lists[0].extractionDataTypeProperty).to.equal('type');
+          expect(lists[0].extractionDataWidthProperty).to.equal('width');
+          expect(lists[0].extractionId).to.equal('nestedExtractionType1');
+          expect(lists[0].extractionName).to.equal('Nested Extraction Type 1');
+          expect(lists[0].extractionNameProperty).to.equal('name');
+          expect(lists[0].headerExtractionsProperty).to.equal('headerExtractions');
+          expect(lists[0].iconProperty).to.equal('icon');
+          expect(lists[0].idField).to.equal('testIdField');
+          expect(lists[0].idProperty).to.equal('id');
+          expect(lists[0].indexName).to.equal('testIndexName');
+          expect(lists[0].indexTypes).to.deep.equal(['testIndexType']);
+          expect(lists[0].linkProperty).to.equal('link');
+          expect(lists[0].nameProperty).to.equal('name');
+          expect(lists[0].newTab).to.be.true;
+          expect(lists[0].searchFields).to.deep.equal({
+            field: 'value'
+          });
+          expect(lists[0].sourceInclude).to.deep.equal(['nestedDataInclude']);
+          expect(lists[0].styleClassProperty).to.equal('styleClass');
+          expect(lists[0].textProperty).to.equal('text');
+          expect(lists[0].transformQueryResults).to.deep.equal(element.transformNestedData);
+          expect(lists[0].typeProperty).to.equal('type');
+          expect(lists[0].showProvenances).to.deep.equal({});
+
+          expect(lists[1].extractionData).to.deep.equal([{
+            text: 'nestedExtraction2'
+          }]);
+          expect(lists[1].extractionDataProperty).to.equal('data');
+          expect(lists[1].extractionDataClassificationsProperty).to.equal('classifications');
+          expect(lists[1].extractionDataHighlightProperty).to.equal('highlight');
+          expect(lists[1].extractionDataIconProperty).to.equal('icon');
+          expect(lists[1].extractionDataIdProperty).to.equal('id');
+          expect(lists[1].extractionDataLinkProperty).to.equal('link');
+          expect(lists[1].extractionDataProvenancesProperty).to.equal('provenances');
+          expect(lists[1].extractionDataStyleClassProperty).to.equal('styleClass');
+          expect(lists[1].extractionDataTextProperty).to.equal('text');
+          expect(lists[1].extractionDataTypeProperty).to.equal('type');
+          expect(lists[1].extractionDataWidthProperty).to.equal('width');
+          expect(lists[1].extractionId).to.equal('nestedExtractionType2');
+          expect(lists[1].extractionName).to.equal('Nested Extraction Type 2');
+          expect(lists[1].extractionNameProperty).to.equal('name');
+          expect(lists[1].headerExtractionsProperty).to.equal('headerExtractions');
+          expect(lists[1].iconProperty).to.equal('icon');
+          expect(lists[1].idField).to.equal('testIdField');
+          expect(lists[1].idProperty).to.equal('id');
+          expect(lists[1].indexName).to.equal('testIndexName');
+          expect(lists[1].indexTypes).to.deep.equal(['testIndexType']);
+          expect(lists[1].linkProperty).to.equal('link');
+          expect(lists[1].nameProperty).to.equal('name');
+          expect(lists[1].newTab).to.be.true;
+          expect(lists[1].searchFields).to.deep.equal({
+            field: 'value'
+          });
+          expect(lists[1].sourceInclude).to.deep.equal(['nestedDataInclude']);
+          expect(lists[1].styleClassProperty).to.equal('styleClass');
+          expect(lists[1].textProperty).to.equal('text');
+          expect(lists[1].transformQueryResults).to.deep.equal(element.transformNestedData);
+          expect(lists[1].typeProperty).to.equal('type');
+          expect(lists[1].showProvenances).to.deep.equal({});
+
+          done();
+        });
+      });
+
+      test('does not have a nested-list if a single-result with no nestedExtractions is opened', function(done) {
+        element.set('_repeatList.1.opened', true);
+
+        flush(function() {
+          var lists = Polymer.dom(element.root).querySelectorAll('single-result > nested-list');
+          expect(lists.length).to.equal(0);
+          done();
+        });
       });
 
       test('does have a confidence-dialog element', function() {
@@ -500,31 +717,22 @@ limitations under the License.
       });
 
       test('does have a build-and-run-query element if result.selected=1', function(done) {
-        element.cacheTransform = function() {};
-        element.indexName = 'testIndexName';
-        element.indexTypes = ['testIndexType'];
-        element.searchFields = {
-          field: 'value'
-        };
-        element.sourceExclude = ['exclude'];
-        element.sourceInclude = ['include'];
-
         element.set('_repeatList.0.selected', 1);
 
         flush(function() {
           expect(element.$$('build-and-run-query')).to.exist;
-          expect(element.$$('build-and-run-query').fields).to.equal('doc_id');
+          expect(element.$$('build-and-run-query').fields).to.equal('testIdField');
           expect(element.$$('build-and-run-query').values).to.equal('id1');
           expect(element.$$('build-and-run-query').indexName).to.equal('testIndexName');
           expect(element.$$('build-and-run-query').indexTypes).to.deep.equal(['testIndexType']);
           expect(element.$$('build-and-run-query').aggregations).to.deep.equal([]);
           expect(element.$$('build-and-run-query').filters).to.deep.equal([]);
-          expect(element.$$('build-and-run-query').sourceExclude).to.deep.equal(['exclude']);
-          expect(element.$$('build-and-run-query').sourceInclude).to.deep.equal(['include']);
+          expect(element.$$('build-and-run-query').sourceExclude).to.deep.equal([]);
+          expect(element.$$('build-and-run-query').sourceInclude).to.deep.equal(['cachedPageInclude']);
           expect(element.$$('build-and-run-query').transformConfig).to.deep.equal({
             field: 'value'
           });
-          expect(element.$$('build-and-run-query').transformFunction).to.deep.equal(element.cacheTransform);
+          expect(element.$$('build-and-run-query').transformFunction).to.deep.equal(element.transformCachedPage);
           done();
         });
       });

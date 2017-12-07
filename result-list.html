@@ -17,6 +17,7 @@ limitations under the License.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../build-and-run-query/build-and-run-query.html">
 <link rel="import" href="../confidence-marker/confidence-dialog.html">
+<link rel="import" href="../nested-list/nested-list.html">
 <link rel="import" href="../paginated-list/paginated-list.html">
 <link rel="import" href="../single-result/single-result.html">
 
@@ -133,17 +134,17 @@ Custom property                  | Description                                | 
       <template is="dom-repeat" items="[[_repeatList]]">
         <template is="dom-if" if="[[_shouldRunCachedPageQuery(item.selected)]]">
           <build-and-run-query
-            fields='"doc_id"'
+            fields="[[idField]]"
             values="[[_getString(item.result, idProperty)]]"
             client="[[client]]"
             index-name="[[indexName]]"
             index-types="[[indexTypes]]"
             aggregations="[]"
             filters="[]"
-            source-exclude="[[sourceExclude]]"
-            source-include="[[sourceInclude]]"
+            source-exclude="[]"
+            source-include="[[sourceIncludeCachedPage]]"
             transform-config="[[searchFields]]"
-            transform-function="[[cacheTransform]]"
+            transform-function="[[transformCachedPage]]"
             error="{{item.cachedPageError}}"
             loading="{{item.cachedPageLoading}}"
             results="{{item.cachedPage}}"
@@ -157,6 +158,7 @@ Custom property                  | Description                                | 
           highlighted-text="[[_getString(item.result, highlightedTextProperty)]]"
           icon="[[_getString(item.result, iconProperty)]]"
           link="[[_getString(item.result, linkProperty)]]"
+          name="[[_getString(item.result, nameProperty)]]"
           rank="[[_getString(item.result, rankProperty)]]"
           result-id="[[_getString(item.result, idProperty)]]"
           style-class="[[_getString(item.result, styleClassProperty)]]"
@@ -182,16 +184,56 @@ Custom property                  | Description                                | 
           detail-link-property="[[detailLinkProperty]]"
           detail-name-property="[[detailNameProperty]]"
           detail-text-property="[[detailTextProperty]]"
-          images="[[_getList(item.result, imagesProperty)]]"
+          images="[[_getProperty(item.result, imagesProperty)]]"
           image-link-property="[[imageLinkProperty]]"
           image-source-property="[[imageSourceProperty]]"
           small-image-style-class="[[smallImageStyleClass]]"
           large-image-style-class="[[largeImageStyleClass]]"
           highlighted-text-tags="[[highlightedTextTags]]"
           new-tab="[[newTab]]"
-          show-provenances="{{_showProvenances}}"
           tag-manager="[[tagManager]]"
-          selected-tab="{{item.selected}}">
+          open="{{item.opened}}"
+          selected-tab="{{item.selected}}"
+          show-provenances="{{_showProvenances}}">
+
+          <template is="dom-if" if="[[item.opened]]">
+            <template is="dom-repeat" items="[[_getList(item.result, nestedExtractionsProperty)]]" as="nestedExtraction">
+              <nested-list
+                client="[[client]]"
+                extraction-data="[[_getProperty(nestedExtraction, extractionDataProperty)]]"
+                extraction-data-property="[[extractionDataProperty]]"
+                extraction-data-classifications-property="[[extractionDataClassificationsProperty]]"
+                extraction-data-highlight-property="[[extractionDataHighlightProperty]]"
+                extraction-data-icon-property="[[extractionDataIconProperty]]"
+                extraction-data-id-property="[[extractionDataIdProperty]]"
+                extraction-data-link-property="[[extractionDataLinkProperty]]"
+                extraction-data-provenances-property="[[extractionDataProvenancesProperty]]"
+                extraction-data-style-class-property="[[extractionDataStyleClassProperty]]"
+                extraction-data-text-property="[[extractionDataTextProperty]]"
+                extraction-data-type-property="[[extractionDataTypeProperty]]"
+                extraction-data-width-property="[[extractionDataWidthProperty]]"
+                extraction-id="[[_getProperty(nestedExtraction, extractionIdProperty)]]"
+                extraction-name="[[_getProperty(nestedExtraction, extractionNameProperty)]]"
+                extraction-name-property="[[extractionNameProperty]]"
+                header-extractions-property="[[headerExtractionsProperty]]"
+                icon-property="[[iconProperty]]"
+                id-field="[[idField]]"
+                id-property="[[idProperty]]"
+                index-name="[[indexName]]"
+                index-types="[[indexTypes]]"
+                link-property="[[linkProperty]]"
+                name-property="[[nameProperty]]"
+                new-tab="[[newTab]]"
+                search-fields="[[searchFields]]"
+                source-include="[[sourceIncludeNestedData]]"
+                style-class-property="[[styleClassProperty]]"
+                text-property="[[textProperty]]"
+                transform-query-results="[[transformNestedData]]"
+                type-property="[[typeProperty]]"
+                show-provenances="{{_showProvenances}}">
+              </nested-list>
+            </template>
+          </template>
         </single-result>
       </template>
     </paginated-list>
@@ -342,6 +384,19 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
+         * The name property in the result objects.
+         *
+         * @type {String}
+         * @default 'name'
+         */
+        nameProperty: {
+          type: String,
+          value: 'name'
+        },
+
+        /**
+         * (Optional)
+         *
          * The rank property in the result objects.
          *
          * @type {String}
@@ -428,6 +483,19 @@ Custom property                  | Description                                | 
         detailExtractionsProperty: {
           type: String,
           value: 'detailExtractions'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The nested extractions property in the result objects that is a list of extraction objects to show as nested result objects in the collapsible details.
+         *
+         * @type {String}
+         * @default 'nestedExtractions'
+         */
+        nestedExtractionsProperty: {
+          type: String,
+          value: 'nestedExtractions'
         },
 
         /**
@@ -584,6 +652,19 @@ Custom property                  | Description                                | 
         extractionDataWidthProperty: {
           type: String,
           value: 'width'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The ID property in the extraction objects.
+         *
+         * @type {String}
+         * @default 'key'
+         */
+        extractionIdProperty: {
+          type: String,
+          value: 'key'
         },
 
         /**
@@ -821,18 +902,7 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
-         * The cached page transform function.
-         *
-         * @type {Object}
-         */
-        cacheTransform: {
-          type: Object
-        },
-
-        /**
-         * (Optional)
-         *
-         * The elasticsearch client object for the cached page query.
+         * The elasticsearch client object for the cached page and nested data queries.
          *
          * @type {Object}
          */
@@ -843,7 +913,18 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
-         * The elasticsearch index name for the cached page query.
+         * The ID field for the cached page and nested data queries.
+         *
+         * @type {String}
+         */
+        idField: {
+          type: String
+        },
+
+        /**
+         * (Optional)
+         *
+         * The elasticsearch index name for the cached page and nested data queries.
          *
          * @type {String}
          */
@@ -854,7 +935,7 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
-         * The elasticsearch index types for the cached page query.
+         * The elasticsearch index types for the cached page and nested data queries.
          *
          * @type {Array}
          */
@@ -865,7 +946,7 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
-         * The search fields config object for the cached page transform function.
+         * The search fields config object for the cached page and nested data transform functions.
          *
          * @type {Object}
          */
@@ -876,12 +957,12 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
-         * The source fields to exclude in the results for the cached page query.
+         * The source fields to include in the results for the cached page query.
          *
          * @type {Array}
          * @default []
          */
-        sourceExclude: {
+        sourceIncludeCachedPage: {
           type: Array,
           value: function() {
             return [];
@@ -891,12 +972,12 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
-         * The source fields to include in the results for the cached page query.
+         * The source fields to include in the results for the nested data query.
          *
          * @type {Array}
          * @default []
          */
-        sourceInclude: {
+        sourceIncludeNestedData: {
           type: Array,
           value: function() {
             return [];
@@ -911,6 +992,28 @@ Custom property                  | Description                                | 
          * @type {Object}
          */
         tagManager: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
+         * The cached page transform function.
+         *
+         * @type {Object}
+         */
+        transformCachedPage: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
+         * The nested data transform function.
+         *
+         * @type {Object}
+         */
+        transformNestedData: {
           type: Object
         },
 
@@ -940,7 +1043,7 @@ Custom property                  | Description                                | 
         },
 
         /**
-         * The list of results and their cached pages for the repeat template.
+         * The list of results and their sub-results (cached page and nested data) for the repeat template.
          *
          * @type {Array}
          * @private
@@ -1003,6 +1106,7 @@ Custom property                  | Description                                | 
       _createRepeatList: function(shownResults) {
         return shownResults.map(function(result) {
           return {
+            opened: false,
             result: result,
             selected: 0
           };
