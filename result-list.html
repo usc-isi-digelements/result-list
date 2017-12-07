@@ -119,6 +119,7 @@ Custom property                  | Description                                | 
         border-bottom-style: solid;
         border-bottom-width: 1px;
         border-bottom-color: var(--primary-background-color);
+        overflow: hidden;
       }
     </style>
 
@@ -190,8 +191,9 @@ Custom property                  | Description                                | 
           small-image-style-class="[[smallImageStyleClass]]"
           large-image-style-class="[[largeImageStyleClass]]"
           highlighted-text-tags="[[highlightedTextTags]]"
-          new-tab="[[newTab]]"
           tag-manager="[[tagManager]]"
+          hide-header="[[hideHeaders]]"
+          new-tab="[[newTab]]"
           open="{{item.opened}}"
           selected-tab="{{item.selected}}"
           show-provenances="{{_showProvenances}}">
@@ -1031,6 +1033,32 @@ Custom property                  | Description                                | 
         },
 
         /**
+         * (Optional)
+         *
+         * Whether to hide each result header.
+         *
+         * @type {Boolean}
+         * @default false
+         */
+        hideHeaders: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * (Optional)
+         *
+         * Whether each result starts opened.
+         *
+         * @type {Boolean}
+         * @default false
+         */
+        opened: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
          * (Output)
          *
          * The list of result objects currently shown in the list that are the query results from each viewed page.
@@ -1049,7 +1077,7 @@ Custom property                  | Description                                | 
          * @private
          */
         _repeatList: {
-          computed: '_createRepeatList(shownResults)',
+          computed: '_createRepeatList(shownResults, opened)',
           type: Array
         },
 
@@ -1100,17 +1128,18 @@ Custom property                  | Description                                | 
        * Creates and returns the `_repeatList` using the given `shownResults`.
        *
        * @param {Array} shownResults
+       * @param {Boolean} opened
        * @return {Array}
        * @private
        */
-      _createRepeatList: function(shownResults) {
-        return shownResults.map(function(result) {
+      _createRepeatList: function(shownResults, opened) {
+        return shownResults ? shownResults.map(function(result) {
           return {
-            opened: false,
+            opened: !!opened,
             result: result,
             selected: 0
           };
-        });
+        }) : undefined;
       },
 
       /**

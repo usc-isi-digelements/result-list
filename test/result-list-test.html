@@ -82,8 +82,10 @@ limitations under the License.
         expect(element.imageSourceProperty).to.equal('source');
         expect(element.smallImageStyleClass).to.equal('');
         expect(element.largeImageStyleClass).to.equal('');
+        expect(element.hideHeaders).to.be.false;
         expect(element.highlightedTextTags).to.equal('em');
         expect(element.newTab).to.be.false;
+        expect(element.opened).to.be.false;
         expect(element.prettyName).to.equal('Results');
         expect(element.prettyNameSingular).to.equal('Result');
         expect(element._showProvenances).to.deep.equal({});
@@ -141,6 +143,23 @@ limitations under the License.
           selected: 0
         }, {
           opened: false,
+          result: {
+            id: 'id2'
+          },
+          selected: 0
+        }]);
+        expect(element._createRepeatList([{
+          id: 'id1'
+        }, {
+          id: 'id2'
+        }], true)).to.deep.equal([{
+          opened: true,
+          result: {
+            id: 'id1'
+          },
+          selected: 0
+        }, {
+          opened: true,
           result: {
             id: 'id2'
           },
