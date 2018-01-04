@@ -190,6 +190,7 @@ Custom property                  | Description                                | 
           image-source-property="[[imageSourceProperty]]"
           small-image-style-class="[[smallImageStyleClass]]"
           large-image-style-class="[[largeImageStyleClass]]"
+          hide-confidences="[[hideConfidences]]"
           highlighted-text-tags="[[highlightedTextTags]]"
           tag-manager="[[tagManager]]"
           hide-header="[[hideHeaders]]"
@@ -218,6 +219,7 @@ Custom property                  | Description                                | 
                 extraction-name="[[_getProperty(nestedExtraction, extractionNameProperty)]]"
                 extraction-name-property="[[extractionNameProperty]]"
                 header-extractions-property="[[headerExtractionsProperty]]"
+                hide-confidences="[[hideConfidences]]"
                 icon-property="[[iconProperty]]"
                 id-field="[[idField]]"
                 id-property="[[idProperty]]"
@@ -847,6 +849,19 @@ Custom property                  | Description                                | 
         largeImageStyleClass: {
           type: String,
           value: ''
+        },
+
+        /**
+         * (Optional)
+         *
+         * Whether to hide the confidences.
+         *
+         * @type {Boolean}
+         * @default false
+         */
+        hideConfidences: {
+          type: Boolean,
+          value: false
         },
 
         /**
