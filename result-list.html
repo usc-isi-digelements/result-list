@@ -191,6 +191,7 @@ Custom property                  | Description                                | 
           large-image-style-class="[[largeImageStyleClass]]"
           hide-confidences="[[hideConfidences]]"
           highlighted-text-tags="[[highlightedTextTags]]"
+          newline-tag="[[newlineTag]]"
           tag-manager="[[tagManager]]"
           hide-header="[[hideHeaders]]"
           new-tab="[[newTab]]"
@@ -874,6 +875,17 @@ Custom property                  | Description                                | 
         highlightedTextTags: {
           type: String,
           value: 'em'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The newline tag (like '\n' or '<br/>').
+         *
+         * @type {String}
+         */
+        newlineTag: {
+          type: String
         },
 
         /**
