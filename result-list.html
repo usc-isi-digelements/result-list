@@ -133,7 +133,7 @@ Custom property                  | Description                                | 
       shown-items="{{shownResults}}">
 
       <template is="dom-repeat" items="[[_repeatList]]">
-        <template is="dom-if" if="[[_shouldRunCachedPageQuery(item.selected)]]">
+        <template is="dom-if" if="[[_shouldRunCachedPageQuery(hideCachedPage, item.selected)]]">
           <build-and-run-query
             fields="[[idField]]"
             values="[[_getString(item.result, idProperty)]]"
@@ -193,6 +193,7 @@ Custom property                  | Description                                | 
           highlighted-text-tags="[[highlightedTextTags]]"
           newline-tag="[[newlineTag]]"
           tag-manager="[[tagManager]]"
+          hide-cached-page="[[hideCachedPage]]"
           hide-header="[[hideHeaders]]"
           new-tab="[[newTab]]"
           open="{{item.opened}}"
@@ -243,12 +244,10 @@ Custom property                  | Description                                | 
     </paginated-list>
 
     <confidence-dialog id="confidenceDialog"
-      confidence="[[_showProvenances.confidence]]"
-      document-id="[[_showProvenances.id]]"
       highlight-tag="[[extractionProvenanceHighlightTag]]"
       provenance-method-property="[[extractionProvenanceMethodProperty]]"
       provenance-text-property="[[extractionProvenanceTextProperty]]"
-      provenances="[[_showProvenances.data]]">
+      data="[[_showProvenances]]">
     </confidence-dialog>
   </template>
 
@@ -854,6 +853,19 @@ Custom property                  | Description                                | 
         /**
          * (Optional)
          *
+         * Whether to hide the cached pages.
+         *
+         * @type {Boolean}
+         * @default false
+         */
+        hideCachedPage: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * (Optional)
+         *
          * Whether to hide the confidences.
          *
          * @type {Boolean}
@@ -1116,9 +1128,9 @@ Custom property                  | Description                                | 
          */
         _showProvenances: {
           observer: '_openConfidenceDialog',
-          type: Object,
+          type: Array,
           value: function() {
-            return {};
+            return [];
           }
         }
       },
@@ -1210,7 +1222,7 @@ Custom property                  | Description                                | 
        * @private
        */
       _openConfidenceDialog: function() {
-        if(this._showProvenances && this._showProvenances.id) {
+        if(this._showProvenances && this._showProvenances.length) {
           this.$$('#confidenceDialog').open();
         }
       },
@@ -1222,8 +1234,8 @@ Custom property                  | Description                                | 
        * @return {Boolean}
        * @private
        */
-      _shouldRunCachedPageQuery: function(selected) {
-        return selected === 1;
+      _shouldRunCachedPageQuery: function(hide, selected) {
+        return !hide && selected === 1;
       }
     });
   })();

@@ -82,13 +82,14 @@ limitations under the License.
         expect(element.imageSourceProperty).to.equal('source');
         expect(element.smallImageStyleClass).to.equal('');
         expect(element.largeImageStyleClass).to.equal('');
+        expect(element.hideCachedPage).to.be.false;
         expect(element.hideHeaders).to.be.false;
         expect(element.highlightedTextTags).to.equal('em');
         expect(element.newTab).to.be.false;
         expect(element.opened).to.be.false;
         expect(element.prettyName).to.equal('Results');
         expect(element.prettyNameSingular).to.equal('Result');
-        expect(element._showProvenances).to.deep.equal({});
+        expect(element._showProvenances).to.deep.equal([]);
       });
 
       test('does have a paginated-list element', function() {
@@ -213,9 +214,12 @@ limitations under the License.
 
       test('_shouldRunCachedPageQuery does return as expected', function() {
         expect(element._shouldRunCachedPageQuery).to.be.a('Function');
-        expect(element._shouldRunCachedPageQuery(0)).to.be.false;
-        expect(element._shouldRunCachedPageQuery(1)).to.be.true;
-        expect(element._shouldRunCachedPageQuery(2)).to.be.false;
+        expect(element._shouldRunCachedPageQuery(false, 0)).to.be.false;
+        expect(element._shouldRunCachedPageQuery(false, 1)).to.be.true;
+        expect(element._shouldRunCachedPageQuery(false, 2)).to.be.false;
+        expect(element._shouldRunCachedPageQuery(true, 0)).to.be.false;
+        expect(element._shouldRunCachedPageQuery(true, 1)).to.be.false;
+        expect(element._shouldRunCachedPageQuery(true, 2)).to.be.false;
       });
 
       test('setting shownResults does update _repeatList', function() {
@@ -580,7 +584,7 @@ limitations under the License.
         expect(results[0].largeImageStyleClass).to.equal('');
         expect(results[0].newTab).to.be.true;
         expect(results[0].selectedTab).to.equal(0);
-        expect(results[0].showProvenances).to.deep.equal({});
+        expect(results[0].showProvenances).to.deep.equal([]);
         expect(results[0].open).to.be.false;
 
         expect(results[1].flag).to.equal('');
@@ -619,7 +623,7 @@ limitations under the License.
         expect(results[1].largeImageStyleClass).to.equal('');
         expect(results[1].newTab).to.be.true;
         expect(results[1].selectedTab).to.equal(0);
-        expect(results[1].showProvenances).to.deep.equal({});
+        expect(results[1].showProvenances).to.deep.equal([]);
         expect(results[1].open).to.be.false;
       });
 
@@ -631,7 +635,7 @@ limitations under the License.
         element.set('_repeatList.0.opened', true);
 
         flush(function() {
-          var lists = Polymer.dom(element.root).querySelectorAll('single-result > nested-list');
+          var lists = Polymer.dom(element.root).querySelectorAll('nested-list');
           expect(lists.length).to.equal(2);
 
           expect(lists[0].extractionData).to.deep.equal([{
@@ -668,7 +672,7 @@ limitations under the License.
           expect(lists[0].textProperty).to.equal('text');
           expect(lists[0].transformQueryResults).to.deep.equal(element.transformNestedData);
           expect(lists[0].typeProperty).to.equal('type');
-          expect(lists[0].showProvenances).to.deep.equal({});
+          expect(lists[0].showProvenances).to.deep.equal([]);
 
           expect(lists[1].extractionData).to.deep.equal([{
             text: 'nestedExtraction2'
@@ -704,7 +708,7 @@ limitations under the License.
           expect(lists[1].textProperty).to.equal('text');
           expect(lists[1].transformQueryResults).to.deep.equal(element.transformNestedData);
           expect(lists[1].typeProperty).to.equal('type');
-          expect(lists[1].showProvenances).to.deep.equal({});
+          expect(lists[1].showProvenances).to.deep.equal([]);
 
           done();
         });
@@ -714,7 +718,7 @@ limitations under the License.
         element.set('_repeatList.1.opened', true);
 
         flush(function() {
-          var lists = Polymer.dom(element.root).querySelectorAll('single-result > nested-list');
+          var lists = Polymer.dom(element.root).querySelectorAll('nested-list');
           expect(lists.length).to.equal(0);
           done();
         });
@@ -723,12 +727,10 @@ limitations under the License.
       test('does have a confidence-dialog element', function() {
         expect(element.$$('confidence-dialog')).to.exist;
         expect(element.$$('confidence-dialog').id).to.equal('confidenceDialog');
-        expect(element.$$('confidence-dialog').confidence).to.not.exist;
-        expect(element.$$('confidence-dialog').documentId).to.not.exist;
+        expect(element.$$('confidence-dialog').data).to.deep.equal([]);
         expect(element.$$('confidence-dialog').highlightTag).to.equal('etk');
         expect(element.$$('confidence-dialog').provenanceMethodProperty).to.equal('method');
         expect(element.$$('confidence-dialog').provenanceTextProperty).to.equal('text');
-        expect(element.$$('confidence-dialog').provenances).to.not.exist;
       });
 
       test('does not have a build-and-run-query element because result.selected=0', function() {
@@ -756,21 +758,25 @@ limitations under the License.
       });
 
       test('setting _showProvenances does set the properties of the confidence-dialog element', function() {
-        element._showProvenances = {
+        element._showProvenances = [{
           confidence: 100,
-          data: [{
+          documentId: '1234',
+          extraction: 'extractionName',
+          provenances: [{
             method: 'provenanceMethod',
             text: 'provenanceText'
-          }],
-          id: '1234'
-        };
+          }]
+        }];
 
         expect(element.$$('confidence-dialog')).to.exist;
-        expect(element.$$('confidence-dialog').confidence).to.equal(100);
-        expect(element.$$('confidence-dialog').documentId).to.equal('1234');
-        expect(element.$$('confidence-dialog').provenances).to.deep.equal([{
-          method: 'provenanceMethod',
-          text: 'provenanceText'
+        expect(element.$$('confidence-dialog').data).to.deep.equal([{
+          confidence: 100,
+          documentId: '1234',
+          extraction: 'extractionName',
+          provenances: [{
+            method: 'provenanceMethod',
+            text: 'provenanceText'
+          }]
         }]);
       });
     });
