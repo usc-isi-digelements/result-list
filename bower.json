@@ -1,7 +1,7 @@
 {
   "name": "result-list",
   "description": "A Polymer Element showing a paginated-list of single-result elements.",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -21,7 +21,7 @@
     "nested-list": "DigElements/nested-list#2.3.4",
     "paginated-list": "DigElements/paginated-list#2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
-    "series-timeline": "DigElements/series-timeline#2.0.1",
+    "series-timeline": "DigElements/series-timeline#2.0.2",
     "single-result": "DigElements/single-result#2.5.3"
   },
   "devDependencies": {
