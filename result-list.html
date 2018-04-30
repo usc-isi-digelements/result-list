@@ -20,6 +20,7 @@ limitations under the License.
 <link rel="import" href="../nested-list/nested-list.html">
 <link rel="import" href="../paginated-list/paginated-list.html">
 <link rel="import" href="../paper-styles/color.html">
+<link rel="import" href="../series-timeline/series-timeline.html">
 <link rel="import" href="../single-result/single-result.html">
 
 <!--
@@ -238,6 +239,23 @@ Custom property                  | Description                                | 
                 type-property="[[typeProperty]]"
                 show-provenances="{{_showProvenances}}">
               </nested-list>
+            </template>
+
+            <template is="dom-repeat" items="[[_getList(item.result, seriesProperty)]]" as="series">
+              <series-timeline
+                client="[[client]]"
+                index-name="[[indexName]]"
+                index-types="[[indexTypes]]"
+                source-include="[[sourceIncludeSeries]]"
+                transform-config="[[transformSeriesConfig]]"
+                transform-function="[[transformSeriesFunction]]"
+                color="[[_getProperty(series, seriesColorProperty)]]"
+                data-type="[[seriesDataType]]"
+                id-field="[[_getProperty(series, seriesIdFieldProperty)]]"
+                label="[[_getProperty(series, seriesTitleProperty)]]"
+                series-id="[[_getProperty(series, seriesIdProperty)]]"
+                type-field="[[_getProperty(series, seriesTypeFieldProperty)]]">
+              </series-timeline>
             </template>
           </template>
         </single-result>
@@ -1107,6 +1125,132 @@ Custom property                  | Description                                | 
         shownResults: {
           notify: true,
           type: Array
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series property in the result objects that is a list of series data objects.
+         *
+         * @type {String}
+         * @default 'series'
+         */
+        seriesProperty: {
+          type: String,
+          value: 'series'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series color property in the series data objects.
+         *
+         * @type {String}
+         * @default 'color'
+         */
+        seriesColorProperty: {
+          type: String,
+          value: 'color'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series data type.  Required to show a series timeline.
+         *
+         * @type {String}
+         */
+        seriesDataType: {
+          type: String
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series ID property in the series data objects.
+         *
+         * @type {String}
+         * @default 'id'
+         */
+        seriesIdProperty: {
+          type: String,
+          value: 'id'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series ID field property in the series data objects.
+         *
+         * @type {String}
+         * @default 'idField'
+         */
+        seriesIdFieldProperty: {
+          type: String,
+          value: 'idField'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series title property in the series data objects.
+         *
+         * @type {String}
+         * @default 'title'
+         */
+        seriesTitleProperty: {
+          type: String,
+          value: 'title'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series type field property in the series data objects.
+         *
+         * @type {String}
+         * @default 'typeField'
+         */
+        seriesTypeFieldProperty: {
+          type: String,
+          value: 'typeField'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The source-include for the series data query.
+         *
+         * @type {Array}
+         * @default []
+         */
+        sourceIncludeSeries: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series data transform config object.  Required to show a series timeline.
+         *
+         * @type {Object}
+         */
+        transformSeriesConfig: {
+          type: Object
+        },
+
+        /**
+         * (Optional)
+         *
+         * The series data transform function.  Required to show a series timeline.
+         *
+         * @type {Object}
+         */
+        transformSeriesFunction: {
+          type: Object
         },
 
         /**
