@@ -9,20 +9,20 @@
     "polymer"
   ],
   "main": "result-list.html",
-  "homepage": "https://github.com/DigElements/result-list/",
+  "homepage": "https://github.com/usc-isi-digelements/result-list/",
   "ignore": [
     "/.*",
     "/test/"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.2",
-    "build-and-run-query": "DigElements/build-and-run-query#2.5.1",
-    "confidence-marker": "DigElements/confidence-marker#2.3.2",
-    "nested-list": "DigElements/nested-list#2.3.4",
-    "paginated-list": "DigElements/paginated-list#2.3.1",
+    "build-and-run-query": "usc-isi-digelements/build-and-run-query#2.5.1",
+    "confidence-marker": "usc-isi-digelements/confidence-marker#2.3.2",
+    "nested-list": "usc-isi-digelements/nested-list#2.3.4",
+    "paginated-list": "usc-isi-digelements/paginated-list#2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
-    "series-timeline": "DigElements/series-timeline#2.0.2",
-    "single-result": "DigElements/single-result#2.5.3"
+    "series-timeline": "usc-isi-digelements/series-timeline#2.0.2",
+    "single-result": "usc-isi-digelements/single-result#2.5.3"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",

@@ -26,7 +26,7 @@ detailExtractions = [{
     confidence: 'high',
     highlight: true,
     icon: 'link',
-    link: 'https://github.com/DigElements/single-result',
+    link: 'https://github.com/usc-isi-digelements/single-result',
     text: 'Single Result'
   }]
 }];
