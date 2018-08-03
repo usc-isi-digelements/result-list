@@ -25,114 +25,167 @@ limitations under the License.
 <body unresolved>
   <dom-bind id="demo">
     <script>
-      (function(document) {
-        var demo = document.querySelector('#demo');
+    (function(document) {
+  var demo = document.querySelector('#demo');
 
-        demo.headerExtractions = [{
-          name: 'Header Extraction #1',
-          data: [{
-            confidence: 100,
-            highlight: true,
-            icon: 'star',
-            link: 'https://nextcentury.com',
-            provenances: [{
+  demo.headerExtractions = [
+    {
+      name: 'Header Extraction #1',
+      data: [
+        {
+          confidence: 100,
+          highlight: true,
+          icon: 'star',
+          link: 'https://nextcentury.com',
+          provenances: [
+            {
               method: 'Demo Method',
               text: '<etk>Demo Text</etk>'
-            }],
-            text: 'Next Century'
-          }, {
-            confidence: 50,
-            icon: 'favorite',
-            link: 'https://github.com/DigElements',
-            provenances: [],
-            text: 'DigElements'
-          }]
-        }, {
-          name: 'Header Extraction #2',
-          data: [{
-            icon: 'error',
-            text: 'Example Extraction'
-          }]
-        }];
-
-        demo.details = [{
-          name: 'Detail #1',
-          text: 'This is unhighlighted text.'
-        }, {
-          name: 'Detail #2',
-          highlightedText: 'This is <em>highlighted</em> text.'
-        }];
-
-        demo.detailExtractions = [{
-          name: 'Detail Extraction #1',
-          data: [{
-            icon: 'link',
-            link: 'https://github.com/usc-isi-digelements/result-list',
-            text: 'Result List'
-          }]
-        }, {
-          name: 'Detail Extraction #2',
-          data: [{
-            icon: 'menu',
-            link: 'https://github.com/usc-isi-digelements/paginated-list',
-            text: 'Paginated List'
-          }, {
-            icon: 'description',
-            link: 'https://github.com/usc-isi-digelements/single-result',
-            text: 'Single Result'
-          }]
-        }];
-
-        demo.images = [{
+            }
+          ],
+          text: 'Next Century'
+        },
+        {
+          confidence: 50,
+          icon: 'favorite',
           link: 'https://github.com/DigElements',
-          source: 'dig.png'
-        }, {
-          link: 'https://nextcentury.com',
-          source: 'NextCentury.png'
-        }];
+          provenances: [],
+          text: 'DigElements'
+        }
+      ]
+    },
+    {
+      name: 'Header Extraction #2',
+      data: [
+        {
+          icon: 'error',
+          text: 'Example Extraction'
+        }
+      ]
+    }
+  ];
 
-        demo.results = [{
-          id: '1',
-          text: 'Text Only'
-        }, {
-          id: '2',
-          flag: 'Flag',
-          icon: 'assignment',
-          link: 'https://nextcentury.com',
-          rank: '0',
-          text: 'Flag, Icon, Link, Rank, Text, Type',
-          type: 'Sample'
-        }, {
-          id: '3',
-          flag: 'Flag',
-          icon: 'assignment',
-          link: 'https://nextcentury.com',
-          rank: '0.5',
-          text: 'Flag, Icon, Link, Rank, Text, Type, Details',
-          type: 'Sample',
-          details: [{
-            name: 'Sample Detail Name',
-            text: 'Sample detail text.'
-          }]
-        }, {
-          id: '4',
-          flag: 'Flag',
-          icon: 'assignment',
-          link: 'https://nextcentury.com',
-          rank: '1.0',
-          text: 'Everything',
-          type: 'Sample',
-          headerExtractions: demo.headerExtractions,
-          details: demo.details,
-          detailExtrations: demo.detailExtractions,
-          images: demo.images
-        }];
+  demo.details = [
+    {
+      name: 'Detail #1',
+      text: 'This is unhighlighted text.'
+    },
+    {
+      name: 'Detail #2',
+      highlightedText: 'This is <em>highlighted</em> text.'
+    }
+  ];
 
-        demo.stringify = function(object) {
-          return JSON.stringify(object);
-        };
-      })(document);
-    </script>
+  demo.nestedExtractions = [
+    {
+      name: 'nested #1',
+      key: 'test #1',
+      data: [
+        {
+          id: 'id #1'
+        }
+      ]
+    },
+    {
+      name: 'nested #2',
+      key: 'test #1',
+      data: [
+        {
+          id: 'id #2'
+        }
+      ]
+    }
+  ];
+
+  demo.detailExtractions = [
+    {
+      name: 'Detail Extraction #1',
+      data: [
+        {
+          icon: 'link',
+          link: 'https://github.com/usc-isi-digelements/result-list',
+          text: 'Result List'
+        }
+      ]
+    },
+    {
+      name: 'Detail Extraction #2',
+      data: [
+        {
+          icon: 'menu',
+          link: 'https://github.com/usc-isi-digelements/paginated-list',
+          text: 'Paginated List'
+        },
+        {
+          icon: 'description',
+          link: 'https://github.com/usc-isi-digelements/single-result',
+          text: 'Single Result'
+        }
+      ]
+    }
+  ];
+
+  // demo.images = [
+  //   {
+  //     link: 'https://github.com/DigElements',
+  //     source: 'dig.png'
+  //   },
+  //   {
+  //     link: 'https://nextcentury.com',
+  //     source: 'NextCentury.png'
+  //   }
+  // ];
+
+  demo.results = [
+    {
+      id: '1',
+      text: 'Text Only'
+    },
+    {
+      id: '2',
+      flag: 'Flag',
+      icon: 'assignment',
+      link: 'https://nextcentury.com',
+      rank: '0',
+      text: 'Flag, Icon, Link, Rank, Text, Type',
+      type: 'Sample'
+    },
+    {
+      id: '3',
+      flag: 'Flag',
+      icon: 'assignment',
+      link: 'https://nextcentury.com',
+      rank: '0.5',
+      text: 'Flag, Icon, Link, Rank, Text, Type, Details',
+      type: 'Sample',
+      details: [
+        {
+          name: 'Sample Detail Name',
+          text: 'Sample detail text.'
+        }
+      ]
+    },
+    {
+      id: '4',
+      flag: 'Flag',
+      icon: 'assignment',
+      link: 'https://nextcentury.com',
+      rank: '0.5',
+      text: 'Everything',
+      type: 'Sample',
+      headerExtractions: demo.headerExtractions,
+      details: demo.details,
+      detailExtrations: demo.detailExtractions,
+      images: demo.images,
+      nestedExtractions: demo.nestedExtractions
+    }
+  ];
+
+  demo.stringify = function(object) {
+    return JSON.stringify(object);
+  };
+})(document);
+</script>
 
     <template is="dom-bind">
       <h3>Input</h3>
