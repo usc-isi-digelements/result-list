@@ -203,8 +203,8 @@ Custom property                  | Description                                | 
           show-provenances="{{_showProvenances}}">
 
           <template is="dom-if" if="true">
-            <hr>
             <template is="dom-repeat" items="[[_getList(item.result, nestedExtractionsProperty)]]" as="nestedExtraction">
+              <hr>
               <nested-list
                 client="[[client]]"
                 extraction-data="[[_getProperty(nestedExtraction, extractionDataProperty)]]"
