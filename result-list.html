@@ -204,7 +204,6 @@ Custom property                  | Description                                | 
 
           <template is="dom-if" if="true">
             <template is="dom-repeat" items="[[_getList(item.result, nestedExtractionsProperty)]]" as="nestedExtraction">
-              <hr>
               <nested-list
                 client="[[client]]"
                 extraction-data="[[_getProperty(nestedExtraction, extractionDataProperty)]]"
