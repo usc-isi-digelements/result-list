@@ -2,7 +2,7 @@
   "name": "result-list",
   "description":
     "A Polymer Element showing a paginated-list of single-result elements.",
-  "version": "2.9.3",
+  "version": "2.9.4",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": ["web-component", "polymer"],
@@ -13,7 +13,8 @@
     "polymer": "Polymer/polymer#^2.0.2",
     "build-and-run-query": "usc-isi-digelements/build-and-run-query#^2.5.1",
     "confidence-marker": "usc-isi-digelements/confidence-marker#^2.3.4",
-    "nested-list": "usc-isi-digelements/nested-list#^2.3.10",
+    "nested-list":
+      "usc-isi-digelements/nested-list#4921e4f966a8af0143009b8dcd29d6c98d5613e4",
     "paginated-list": "usc-isi-digelements/paginated-list#^2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "series-timeline": "usc-isi-digelements/series-timeline#^2.0.2",
