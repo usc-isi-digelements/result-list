@@ -1302,6 +1302,14 @@ Custom property                  | Description                                | 
       totalShown,
       loading
     ) {
+      console.log(
+        '_createHeader',
+        prettyNameSingular,
+        prettyNamePlural,
+        totalCount,
+        totalShown,
+        loading
+      );
       if (totalCount) {
         // Use regex replace to add commas to count.
         var totalCountString = totalCount
