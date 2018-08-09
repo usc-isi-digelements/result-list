@@ -1311,11 +1311,13 @@ Custom property                  | Description                                | 
         loading
       );
       if (totalCount) {
+        console.log('in first if of _createHeader');
         // Use regex replace to add commas to count.
         var totalCountString = totalCount
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         if (totalShown && totalShown < totalCount) {
+          console.log('in second if of _createHeader');
           var totalShownString = totalShown
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -1334,6 +1336,7 @@ Custom property                  | Description                                | 
         );
       }
       if (loading) {
+        console.log('in laoding');
         return 'Loading ' + prettyNamePlural + '...';
       }
       return 'No ' + prettyNamePlural;
