@@ -105,24 +105,28 @@ Custom property                  | Description                                | 
       }
 
       paginated-list {
+        background-color: var(--paper-grey-100);
+        padding-top: 10px;
         --paginated-list-loading-spinner: var(--result-list-loading-spinner);
         --paginated-list-max-height: var(--result-list-max-height, 1500px);
         --paginated-list-scroll-threshold: var(--result-list-scroll-threshold);
         --paginated-list-show-more-button: var(--result-list-show-more-button);
       }
 
-      single-result:first-of-type {
+      /* single-result:first-of-type {
+        background-color: white;
         border-top-style: solid;
         border-top-width: 1px;
         border-top-color: var(--paper-grey-300);
-      }
+      } */
 
       single-result {
-        border-bottom-style: solid;
+        /* border-bottom-style: solid;
         border-bottom-width: 1px;
-        border-bottom-color: var(--paper-grey-300);
+        border-bottom-color: var(--paper-grey-300); */
         overflow: hidden;
       }
+
     </style>
 
     <paginated-list
@@ -1371,12 +1375,25 @@ Custom property                  | Description                                | 
      * @private
      */
     _getList: function(item, property) {
-      console.log('property', property);
-      if (property == 'nestedExtractions') {
+      if (property === 'nestedExtractions') {
         console.log('nested', item[property]);
+      }
+      if (property === 'detailExtractions') {
+        console.log('detailExtractions', item['detailExtractions']);
       }
       return (item ? item[property] : undefined) || [];
     },
+
+    // /**
+    //  * Returns the style class in the given item.
+    //  *
+    //  * @param {Boolean} open
+    //  * @return {String}
+    //  * @private
+    //  */
+    // _getSingleResultStyleClass(open) {
+    //   return open ? 'Opened' : 'Closed';
+    // },
 
     /**
      * Returns the given property in the given item.

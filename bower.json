@@ -18,8 +18,9 @@
     "paginated-list": "usc-isi-digelements/paginated-list#^2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "series-timeline": "usc-isi-digelements/series-timeline#^2.0.2",
-    "single-result": "usc-isi-digelements/single-result#^2.5.4"
+    "single-result": "usc-isi-digelements/single-result#^2.5.8"
   },
+
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
     "web-component-tester": "^6.0.0"
