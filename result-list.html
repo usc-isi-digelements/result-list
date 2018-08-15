@@ -120,10 +120,13 @@ Custom property                  | Description                                | 
         border-top-color: var(--paper-grey-300);
       } */
 
+      nested-list {
+        background-color: var(--paper-grey-300);
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
+
       single-result {
-        /* border-bottom-style: solid;
-        border-bottom-width: 1px;
-        border-bottom-color: var(--paper-grey-300); */
         overflow: hidden;
       }
 
@@ -201,6 +204,7 @@ Custom property                  | Description                                | 
           tag-manager="[[tagManager]]"
           hide-cached-page="[[hideCachedPage]]"
           hide-header="[[hideHeaders]]"
+          nested-object="[[nestedObject]]"
           new-tab="[[newTab]]"
           open="{{item.opened}}"
           selected-tab="{{item.selected}}"
@@ -1103,6 +1107,18 @@ Custom property                  | Description                                | 
        * @default false
        */
       hideHeaders: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * (Required)
+       *
+       *
+       * @type {Boolean}
+       * @default false
+       */
+      nestedObject: {
         type: Boolean,
         value: false
       },
