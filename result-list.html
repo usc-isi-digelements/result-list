@@ -123,6 +123,8 @@ Custom property                  | Description                                | 
       nested-list {
         background-color: var(--paper-grey-300);
         margin-bottom: 20px;
+        margin-left: 5px;
+        margin-right: 5px;
         padding-bottom: 20px;
       }
 
@@ -210,43 +212,45 @@ Custom property                  | Description                                | 
           selected-tab="{{item.selected}}"
           show-provenances="{{_showProvenances}}">
 
-          <template is="dom-if" if="[[item.opened]]">
+          <template is="dom-if" if="true">
             <template is="dom-repeat" items="[[_getList(item.result, nestedExtractionsProperty)]]" as="nestedExtraction">
-              <nested-list
-                client="[[client]]"
-                extraction-data="[[_getProperty(nestedExtraction, extractionDataProperty)]]"
-                extraction-data-property="[[extractionDataProperty]]"
-                extraction-data-classifications-property="[[extractionDataClassificationsProperty]]"
-                extraction-data-highlight-property="[[extractionDataHighlightProperty]]"
-                extraction-data-icon-property="[[extractionDataIconProperty]]"
-                extraction-data-id-property="[[extractionDataIdProperty]]"
-                extraction-data-link-property="[[extractionDataLinkProperty]]"
-                extraction-data-provenances-property="[[extractionDataProvenancesProperty]]"
-                extraction-data-style-class-property="[[extractionDataStyleClassProperty]]"
-                extraction-data-text-property="[[extractionDataTextProperty]]"
-                extraction-data-type-property="[[extractionDataTypeProperty]]"
-                extraction-data-width-property="[[extractionDataWidthProperty]]"
-                extraction-id="[[_getProperty(nestedExtraction, extractionIdProperty)]]"
-                extraction-name="[[_getProperty(nestedExtraction, extractionNameProperty)]]"
-                extraction-name-property="[[extractionNameProperty]]"
-                header-extractions-property="[[headerExtractionsProperty]]"
-                hide-confidences="[[hideConfidences]]"
-                icon-property="[[iconProperty]]"
-                id-field="[[idField]]"
-                id-property="[[idProperty]]"
-                index-name="[[indexName]]"
-                index-types="[[indexTypes]]"
-                link-property="[[linkProperty]]"
-                name-property="[[nameProperty]]"
-                new-tab="[[newTab]]"
-                search-fields="[[searchFields]]"
-                source-include="[[sourceIncludeNestedData]]"
-                style-class-property="[[styleClassProperty]]"
-                text-property="[[textProperty]]"
-                transform-query-results="[[transformNestedData]]"
-                type-property="[[typeProperty]]"
-                show-provenances="{{_showProvenances}}">
-              </nested-list>
+              <template is="dom-if" if="[[_getProperty(nestedExtraction, extractionDataProperty)]]">
+                <nested-list
+                  client="[[client]]"
+                  extraction-data="[[_getProperty(nestedExtraction, extractionDataProperty)]]"
+                  extraction-data-property="[[extractionDataProperty]]"
+                  extraction-data-classifications-property="[[extractionDataClassificationsProperty]]"
+                  extraction-data-highlight-property="[[extractionDataHighlightProperty]]"
+                  extraction-data-icon-property="[[extractionDataIconProperty]]"
+                  extraction-data-id-property="[[extractionDataIdProperty]]"
+                  extraction-data-link-property="[[extractionDataLinkProperty]]"
+                  extraction-data-provenances-property="[[extractionDataProvenancesProperty]]"
+                  extraction-data-style-class-property="[[extractionDataStyleClassProperty]]"
+                  extraction-data-text-property="[[extractionDataTextProperty]]"
+                  extraction-data-type-property="[[extractionDataTypeProperty]]"
+                  extraction-data-width-property="[[extractionDataWidthProperty]]"
+                  extraction-id="[[_getProperty(nestedExtraction, extractionIdProperty)]]"
+                  extraction-name="[[_getProperty(nestedExtraction, extractionNameProperty)]]"
+                  extraction-name-property="[[extractionNameProperty]]"
+                  header-extractions-property="[[headerExtractionsProperty]]"
+                  hide-confidences="[[hideConfidences]]"
+                  icon-property="[[iconProperty]]"
+                  id-field="[[idField]]"
+                  id-property="[[idProperty]]"
+                  index-name="[[indexName]]"
+                  index-types="[[indexTypes]]"
+                  link-property="[[linkProperty]]"
+                  name-property="[[nameProperty]]"
+                  new-tab="[[newTab]]"
+                  search-fields="[[searchFields]]"
+                  source-include="[[sourceIncludeNestedData]]"
+                  style-class-property="[[styleClassProperty]]"
+                  text-property="[[textProperty]]"
+                  transform-query-results="[[transformNestedData]]"
+                  type-property="[[typeProperty]]"
+                  show-provenances="{{_showProvenances}}">
+                </nested-list>
+              </template>
             </template>
 
             <template is="dom-repeat" items="[[_getList(item.result, seriesProperty)]]" as="series">
