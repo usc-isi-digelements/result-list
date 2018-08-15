@@ -14,7 +14,7 @@
     "build-and-run-query": "usc-isi-digelements/build-and-run-query#^2.5.1",
     "confidence-marker": "usc-isi-digelements/confidence-marker#^2.3.4",
     "nested-list":
-      "usc-isi-digelements/nested-list#da8f7e7b400c783fb1cf0648d291e898d3464735",
+      "usc-isi-digelements/nested-list#047caa68e59d94e3e6f02fcc838694eaa4355d6b",
     "paginated-list": "usc-isi-digelements/paginated-list#^2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "series-timeline": "usc-isi-digelements/series-timeline#^2.0.2",
