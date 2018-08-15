@@ -14,12 +14,12 @@
     "build-and-run-query": "usc-isi-digelements/build-and-run-query#^2.5.1",
     "confidence-marker": "usc-isi-digelements/confidence-marker#^2.3.4",
     "nested-list":
-      "usc-isi-digelements/nested-list#b53c015ff70b5e7a2e570478dbb0a89a1f09f901",
+      "usc-isi-digelements/nested-list#da8f7e7b400c783fb1cf0648d291e898d3464735",
     "paginated-list": "usc-isi-digelements/paginated-list#^2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "series-timeline": "usc-isi-digelements/series-timeline#^2.0.2",
     "single-result":
-      "usc-isi-digelements/single-result#66c0e92cf68fc77af92ca967ffe0b0a67da597cc"
+      "usc-isi-digelements/single-result#ccaff3290b63a8e18ab425f6228ca0d24f5ae5a4"
   },
 
   "devDependencies": {

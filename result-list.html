@@ -210,7 +210,7 @@ Custom property                  | Description                                | 
           selected-tab="{{item.selected}}"
           show-provenances="{{_showProvenances}}">
 
-          <template is="dom-if" if="true">
+          <template is="dom-if" if="[[item.opened]]">
             <template is="dom-repeat" items="[[_getList(item.result, nestedExtractionsProperty)]]" as="nestedExtraction">
               <nested-list
                 client="[[client]]"
