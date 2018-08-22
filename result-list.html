@@ -210,7 +210,7 @@ Custom property                  | Description                                | 
           new-tab="[[newTab]]"
           open="{{item.opened}}"
           selected-tab="{{item.selected}}"
-          show-provenances="{{_showProvenances}}">
+          show-provenances="{{showProvenances}}">
 
           <template is="dom-if" if="true">
             <template is="dom-repeat" items="[[_getList(item.result, nestedExtractionsProperty)]]" as="nestedExtraction">
@@ -248,7 +248,7 @@ Custom property                  | Description                                | 
                   text-property="[[textProperty]]"
                   transform-query-results="[[transformNestedData]]"
                   type-property="[[typeProperty]]"
-                  show-provenances="{{_showProvenances}}">
+                  show-provenances="{{showProvenances}}">
                 </nested-list>
               </template>
             </template>
@@ -278,18 +278,20 @@ Custom property                  | Description                                | 
       highlight-tag="[[extractionProvenanceHighlightTag]]"
       provenance-method-property="[[extractionProvenanceMethodProperty]]"
       provenance-text-property="[[extractionProvenanceTextProperty]]"
-      data="[[_showProvenances]]">
+      data="[[showProvenances]]">
     </confidence-dialog>
   </template>
 
   <script>
-  (function() {
-  'use strict';
+  class ResultList extends Polymer.Element {
+  // returns the name of the component
+  static get is() {
+    return 'result-list';
+  }
 
-  Polymer({
-    is: 'result-list',
-
-    properties: {
+  // defines the component's properties
+  static get properties() {
+    return {
       /**
        * (Required)
        *
@@ -1094,12 +1096,15 @@ Custom property                  | Description                                | 
        * The header for the list.
        *
        * @type {String}
+       * @default 'loading'
        */
       header: {
+        value: 'loading',
+        notify: true,
+        type: String,
         computed:
           '_createHeader(prettyNameSingular, prettyName, totalResults, shownResults.length, loading)',
-        notify: true,
-        type: String
+        observer: 'printTitle'
       },
 
       /**
@@ -1295,172 +1300,172 @@ Custom property                  | Description                                | 
       /**
        * The provenance data and result ID to show in the confidence/provenance dialog.  An object containing {Array} data and {Number|String} id.
        *
-       * @type {Object}
-       * @default {}
-       * @private
+       * @type {Array}
+       * @default []
+       *
        */
-      _showProvenances: {
-        observer: '_openConfidenceDialog',
+      showProvenances: {
+        observer: 'openConfidenceDialog',
+        // computed: 'openConfidenceDialog2(showProvenances)',
         type: Array,
         value: function() {
           return [];
         }
       }
-    },
+    };
+  }
 
-    /**
-     * Returns the header for the list.
-     *
-     * @param {String} prettyNameSingular
-     * @param {String} prettyNamePlural
-     * @param {Number} totalCount
-     * @param {Number} totalShown
-     * @param {Boolean} loading
-     * @return {String}
-     * @private
-     */
-    _createHeader: function(
-      prettyNameSingular,
-      prettyNamePlural,
-      totalCount,
-      totalShown,
-      loading
-    ) {
-      console.log(
-        '_createHeader',
-        prettyNameSingular,
-        prettyNamePlural,
-        totalCount,
-        totalShown,
-        loading
-      );
-      if (totalCount) {
-        console.log('in first if of _createHeader');
-        // Use regex replace to add commas to count.
-        var totalCountString = totalCount
+  constructor() {
+    super();
+  }
+
+  printTitle(newValue, oldValue) {
+    // if (
+    //   this.parentElement.parentElement !== null &&
+    //   this.parentElement.parentElement.querySelector(
+    //     '#searchTitle_container'
+    //   ) !== null
+    // ) {
+    //   this.parentElement.parentElement.querySelector(
+    //     '#searchTitle_container'
+    //   ).innerHTML = newValue;
+    // }
+  }
+
+  /**
+   * Returns the header for the list.
+   *
+   * @param {String} prettyNameSingular
+   * @param {String} prettyNamePlural
+   * @param {Number} totalCount
+   * @param {Number} totalShown
+   * @param {Boolean} loading
+   * @return {String}
+   * @private
+   */
+  _createHeader(
+    prettyNameSingular,
+    prettyNamePlural,
+    totalCount,
+    totalShown,
+    loading
+  ) {
+    if (totalCount) {
+      // Use regex replace to add commas to count.
+      var totalCountString = totalCount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      if (totalShown && totalShown < totalCount) {
+        // this.set('searchTest', 2);
+        var totalShownString = totalShown
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        if (totalShown && totalShown < totalCount) {
-          console.log('in second if of _createHeader');
-          var totalShownString = totalShown
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-          return (
-            totalShownString +
-            ' of ' +
-            totalCountString +
-            ' ' +
-            (totalCount === 1 ? prettyNameSingular : prettyNamePlural)
-          );
-        }
+
         return (
+          totalShownString +
+          ' of ' +
           totalCountString +
           ' ' +
           (totalCount === 1 ? prettyNameSingular : prettyNamePlural)
         );
       }
-      if (loading) {
-        console.log('in laoding');
-        return 'Loading ' + prettyNamePlural + '...';
-      }
-      return 'No ' + prettyNamePlural;
-    },
-
-    /**
-     * Creates and returns the `_repeatList` using the given `shownResults`.
-     *
-     * @param {Array} shownResults
-     * @param {Boolean} opened
-     * @return {Array}
-     * @private
-     */
-    _createRepeatList: function(shownResults, opened) {
-      return shownResults
-        ? shownResults.map(function(result) {
-            return {
-              opened: !!opened,
-              result: result,
-              selected: 0
-            };
-          })
-        : undefined;
-    },
-
-    /**
-     * Returns the array in the given item at the given property or an empty array by default.
-     *
-     * @param {Object} item
-     * @param {String} property
-     * @return {Array}
-     * @private
-     */
-    _getList: function(item, property) {
-      if (property === 'nestedExtractions') {
-        console.log('nested', item[property]);
-      }
-      if (property === 'detailExtractions') {
-        console.log('detailExtractions', item['detailExtractions']);
-      }
-      return (item ? item[property] : undefined) || [];
-    },
-
-    // /**
-    //  * Returns the style class in the given item.
-    //  *
-    //  * @param {Boolean} open
-    //  * @return {String}
-    //  * @private
-    //  */
-    // _getSingleResultStyleClass(open) {
-    //   return open ? 'Opened' : 'Closed';
-    // },
-
-    /**
-     * Returns the given property in the given item.
-     *
-     * @param {Object} item
-     * @param {String} property
-     * @return {Object}
-     * @private
-     */
-    _getProperty: function(item, property) {
-      return item[property];
-    },
-
-    /**
-     * Returns the string in the given item at the given property or an empty string by default.
-     *
-     * @param {Object} item
-     * @param {String} property
-     * @return {String}
-     * @private
-     */
-    _getString: function(item, property) {
-      return (item ? item[property] : undefined) || '';
-    },
-
-    /**
-     * Opens the confidence/provenance dialog.
-     *
-     * @private
-     */
-    _openConfidenceDialog: function() {
-      if (this._showProvenances && this._showProvenances.length) {
-        this.$$('#confidenceDialog').open();
-      }
-    },
-
-    /**
-     * Returns whether to run the cached page query.
-     *
-     * @param {Number} selected
-     * @return {Boolean}
-     * @private
-     */
-    _shouldRunCachedPageQuery: function(hide, selected) {
-      return !hide && selected === 1;
+      return (
+        totalCountString +
+        ' ' +
+        (totalCount === 1 ? prettyNameSingular : prettyNamePlural)
+      );
     }
-  });
-})();
+    if (loading) {
+      return 'Loading ' + prettyNamePlural + '...';
+    }
+    return 'No ' + prettyNamePlural;
+  }
+
+  /**
+   * Creates and returns the `_repeatList` using the given `shownResults`.
+   *
+   * @param {Array} shownResults
+   * @param {Boolean} opened
+   * @return {Array}
+   * @private
+   */
+  _createRepeatList(shownResults, opened) {
+    this.searchTest = 0;
+    return shownResults
+      ? shownResults.map(function(result) {
+          return {
+            opened: !!opened,
+            result: result,
+            selected: 0
+          };
+        })
+      : undefined;
+  }
+
+  /**
+   * Returns the array in the given item at the given property or an empty array by default.
+   *
+   * @param {Object} item
+   * @param {String} property
+   * @return {Array}
+   * @private
+   */
+  _getList(item, property) {
+    return (item ? item[property] : undefined) || [];
+  }
+
+  /**
+   * Returns the given property in the given item.
+   *
+   * @param {Object} item
+   * @param {String} property
+   * @return {Object}
+   * @private
+   */
+  _getProperty(item, property) {
+    if (property === 'data' && item[property].length === 0) {
+      return false;
+    }
+    return item[property];
+  }
+
+  /**
+   * Returns the string in the given item at the given property or an empty string by default.
+   *
+   * @param {Object} item
+   * @param {String} property
+   * @return {String}
+   * @private
+   */
+  _getString(item, property) {
+    return (item ? item[property] : undefined) || '';
+  }
+
+  /**
+   * Opens the confidence/provenance dialog.
+   *
+   *
+   */
+  openConfidenceDialog(newValue, oldValue) {
+    if (this.showProvenances && this.showProvenances.length) {
+      if (this.shadowRoot.querySelector('#confidenceDialog') !== null) {
+        this.shadowRoot.querySelector('#confidenceDialog').open();
+      }
+    }
+  }
+
+  /**
+   * Returns whether to run the cached page query.
+   *
+   * @param {Number} selected
+   * @return {Boolean}
+   * @private
+   */
+  _shouldRunCachedPageQuery(hide, selected) {
+    return !hide && selected === 1;
+  }
+}
+
+customElements.define(ResultList.is, ResultList);
 </script>
 </dom-module>

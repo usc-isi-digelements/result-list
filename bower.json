@@ -2,7 +2,7 @@
   "name": "result-list",
   "description":
     "A Polymer Element showing a paginated-list of single-result elements.",
-  "version": "2.9.4",
+  "version": "2.9.5",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": ["web-component", "polymer"],
@@ -10,16 +10,14 @@
   "homepage": "https://github.com/usc-isi-digelements/result-list/",
   "ignore": ["/.*", "/test/"],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.2",
+    "polymer": "Polymer/polymer#2.5.0",
     "build-and-run-query": "usc-isi-digelements/build-and-run-query#^2.5.1",
     "confidence-marker": "usc-isi-digelements/confidence-marker#^2.3.4",
-    "nested-list":
-      "usc-isi-digelements/nested-list#047caa68e59d94e3e6f02fcc838694eaa4355d6b",
+    "nested-list": "usc-isi-digelements/nested-list#^2.3.10",
     "paginated-list": "usc-isi-digelements/paginated-list#^2.3.1",
     "paper-styles": "PolymerElements/paper-styles#^2.0.0",
     "series-timeline": "usc-isi-digelements/series-timeline#^2.0.2",
-    "single-result":
-      "usc-isi-digelements/single-result#ccaff3290b63a8e18ab425f6228ca0d24f5ae5a4"
+    "single-result": "usc-isi-digelements/single-result#^2.5.9"
   },
 
   "devDependencies": {
